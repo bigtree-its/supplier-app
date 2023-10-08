@@ -1,0 +1,91 @@
+.demo-table {
+    width: 100%;
+}
+
+table.table {
+    box-shadow: none;
+    border: 1px solid #ddd;
+}
+
+table.table td {
+    border: 1px solid #ddd;
+}
+
+table.table td,
+table.table th {
+    border: 1px solid #ddd;
+}
+
+.mat-row {
+    height: 20px;
+    line-height: 20px;
+}
+
+.mat-column-Reference {
+    /* width: 32px; */
+    /* border-right: 1px solid currentColor; */
+    padding-right: 5px;
+    text-align: center;
+}
+
+.mat-column-Customer {
+    padding-left: 5px;
+}
+
+.mat-column-Date {
+    font-style: normal;
+}
+
+.mat-column-Amount {
+    width: 32px;
+    text-align: center;
+}
+
+.mat-column-Status {
+    font-weight: bold;
+}
+
+.order-item-container {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid var(--border);
+    gap: 1rem;
+    padding: 5px 10px;
+    margin: 5px 0;
+    align-items: center;
+}
+
+.order-item-wrapper {
+    display: block;
+    width: auto;
+    background-color: var(--border);
+    padding: 5px;
+}
+
+
+/* Mobile */
+
+@media (min-width: 400px) {
+    .sm {
+        display: block;
+    }
+}
+
+
+/* Tablet */
+
+@media (min-width: 600px) {
+    .md {
+        display: block;
+    }
+}
+
+
+/* Large */
+
+@media (min-width: 900px) {
+    .sm,
+    .md {
+        display: none;
+    }
+}

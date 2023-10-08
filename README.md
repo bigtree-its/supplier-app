@@ -25,3 +25,8 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+
+# How to use Font Awsome Icons
+https://github.com/FortAwesome/angular-fontawesome
+https://gist.github.com/vades/5a1a7e0801346045c1a0b25d1fb87d95

@@ -1,0 +1,132 @@
+<div class="container">
+    <ng-container [ngSwitch]="activeLayout">
+        <ng-container *ngSwitchCase="'home'" [ngTemplateOutlet]="homeBlock"></ng-container>
+        <ng-container *ngSwitchCase="'dashboard'" [ngTemplateOutlet]="dashboardBlock"></ng-container>
+        <ng-container *ngSwitchCase="'payment'" [ngTemplateOutlet]="paymentsBlock"></ng-container>
+        <ng-container *ngSwitchDefault [ngTemplateOutlet]="paymentsBlock"></ng-container>
+    </ng-container>
+</div>
+<ng-template #homeBlock>
+    <div class="vertical" style="width: 420px;padding: 10px; border: 1px solid var(--light-color);">
+        <button class="bt-button" (click)="selectLayout('dashboard')">Dashboard</button>
+        <button class="bt-button" (click)="selectLayout('payment')">Orders</button>
+        <button class="bt-button">Foods</button>
+        <button class="bt-button">Profile</button>
+    </div>
+</ng-template>
+<ng-template #dashboardBlock>
+    <div class="h-flex" style="padding: 10px 0;">
+        <img src="/assets/icons/left-arrow.png" loading="lazy" class="back-left" (click)="selectLayout('home')">
+        <div class="y-flex">
+            <span style="font-size: x-large;">Dashboard</span> Welcome to BEKU admin
+        </div>
+    </div>
+
+    <div class="y-flex" style="border: 1px solid #ddd; padding: 20px; margin: 10px 0;" [routerLink]="[ '/orders']">
+        <div style="display: flex;align-items: center;">
+            <img src="/assets/icons/fast-food.png" loading="lazy" class="back-left"><span style="font-size: x-large;">Your Orders</span>
+        </div>
+        <div class="h-flex">
+            <div class="section y-flex" style="flex-grow: 1;">
+                <span>Today</span>
+                <span>12</span>
+            </div>
+            <div class="section y-flex" style="flex-grow: 1;">
+                <span>Week</span>
+                <span>120</span>
+            </div>
+            <div class="section y-flex" style="flex-grow: 1;">
+                <span>Month</span>
+                <span>1200</span>
+            </div>
+            <div class="section y-flex" style="flex-grow: 1;">
+                <span>Year</span>
+                <span>12000</span>
+            </div>
+        </div>
+    </div>
+    <div class="y-flex" style="border: 1px solid #ddd; padding: 20px;">
+        <div style="display: flex;align-items: center;">
+            <img src="/assets/icons/wallet-filled-money-tool.png" loading="lazy" class="back-left"><span style="font-size: x-large;">Your Revenue</span>
+        </div>
+        <div class="h-flex">
+            <div class="section y-flex" style="flex-grow: 1;">
+                <span>Today</span>
+                <span>£12</span>
+            </div>
+            <div class="section y-flex" style="flex-grow: 1;">
+                <span>Week</span>
+                <span>£120</span>
+            </div>
+            <div class="section y-flex" style="flex-grow: 1;">
+                <span>Month</span>
+                <span>£1200</span>
+            </div>
+            <div class="section y-flex" style="flex-grow: 1;">
+                <span>Year</span>
+                <span>£12000</span>
+            </div>
+        </div>
+    </div>
+
+    <div style="border: 1px solid #ddd; padding: 20px; margin: 10px 0;border-radius: 12px; --box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .1);">
+
+        <div class="between">
+            <div class="y-flex">
+                <span>Total Menus</span>
+                <span style="font-size: 30px;">12</span>
+            </div>
+            <div style="display: flex;align-items: center;">
+                <img src="/assets/icons/fast-food.png" loading="lazy" height="50" width="50">
+            </div>
+        </div>
+
+    </div>
+    <div class="y-flex" style="border: 1px solid #ddd; padding: 20px; margin: 10px 0;border-radius: 12px; --box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .1);">
+        <span style="font-size: x-large;">Orders Summary</span>
+        <div class="h-flex">
+            <span class="select-span" [class.selectedSpan]="isSelectedOrderSummaryPeriod('today')" (click)="selectOrderSummaryPeriod('today')">Today</span>
+            <span class="select-span" [class.selectedSpan]="isSelectedOrderSummaryPeriod('week')" (click)="selectOrderSummaryPeriod('week')">Week</span>
+            <span class="select-span" [class.selectedSpan]="isSelectedOrderSummaryPeriod('month')" (click)="selectOrderSummaryPeriod('month')">Month</span>
+            <span class="select-span" [class.selectedSpan]="isSelectedOrderSummaryPeriod('year')" (click)="selectOrderSummaryPeriod('year')">Year</span>
+        </div>
+        <div class="h-flex">
+            <div class="section y-flex" style="flex-grow: 1;">
+                <span>Open</span>
+                <span>10</span>
+            </div>
+            <div class="section y-flex" style="flex-grow: 1;">
+                <span>Completed</span>
+                <span>5</span>
+            </div>
+            <div class="section y-flex" style="flex-grow: 1;">
+                <span>Cancelled</span>
+                <span>3</span>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #paymentsBlock>
+    <div style="display: flex;align-items: center;">
+        <img src="/assets/icons/left-arrow.png" loading="lazy" class="back-left" (click)="selectLayout('home')"><span style="font-size: x-large;">Your
+            Payments</span>
+    </div>
+    <div class="orders">
+        <div>
+            <span>Today</span>
+            <span>£12</span>
+        </div>
+        <div>
+            <span>Week</span>
+            <span>£120</span>
+        </div>
+        <div>
+            <span>Month</span>
+            <span>£1200</span>
+        </div>
+        <div>
+            <span>Year</span>
+            <span>£12000</span>
+        </div>
+    </div>
+</ng-template>

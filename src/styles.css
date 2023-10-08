@@ -1,1 +1,292 @@
 /* You can add global styles to this file, and also import other style files */
+
+:root {
+    --green: #27ae60;
+    --black: rgb(0, 0, 0);
+    --light-color: #e6e6e6;
+    --section-background: rgb(238, 238, 238);
+    --aquamarine: aquamarine;
+    --orange: coral;
+    --white: #fff;
+    --warning: #ffc107;
+    /* --border: #e3e9ed; */
+    --border: #DDDDDD;
+    --v-border: chartreuse;
+    --light-background: #fafafa;
+    --mild-white: rgb(233, 230, 230);
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px 30px;
+    height: 260px;
+    border: 1px solid #e6e6e6;
+    border-radius: 5px;
+    transition: all 0.2s ease-in-out;
+}
+
+.center {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.gap {
+    gap: 1.0;
+}
+
+.bt-button {
+    border: 1px solid #8a8a8a;
+    border-radius: 2px;
+    padding: 5px 10px;
+    background-color: transparent;
+}
+
+.bt-button:focus {
+    border: 1px solid #6e20ff;
+}
+
+.bt-button:hover {
+    border: 1px solid #6e20ff;
+}
+
+.btn-sm {
+    padding: 0 10px;
+}
+
+.btn-md {
+    padding: 10px;
+}
+
+.btn-lg {
+    padding: 20px;
+}
+
+.btn-g {
+    background-color: #27ae60;
+    border: 1px solid #27ae60;
+    color: #fff;
+}
+
+.btn-p {
+    background-color: #274bae;
+    border: 1px solid #274bae;
+    color: #fff;
+}
+
+.btn-d {
+    background-color: indianred;
+    border: 1px solid indianred;
+    color: #fff;
+}
+
+.btn-g:hover {
+    cursor: pointer;
+    border: 1px solid #118e45;
+    transition: all 0.2s ease-in-out;
+    --box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .1);
+}
+
+.btn-d:hover {
+    cursor: pointer;
+    border: 1px solid rgb(239, 71, 71);
+    transition: all 0.2s ease-in-out;
+    --box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .1);
+}
+
+.btn-p:hover {
+    cursor: pointer;
+    border: 1px solid #0c38b3;
+    transition: all 0.2s ease-in-out;
+    --box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .1);
+}
+
+.bt-button:hover {
+    cursor: pointer;
+    --box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .1);
+}
+
+.h-flex,
+.horizontal {
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+}
+
+.y-flex,
+.vertical {
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    gap: .5rem;
+}
+
+.between {
+    display: flex;
+    justify-content: space-between;
+}
+
+.section {
+    border: 1px solid #e6e6e6;
+    border-radius: 5px;
+    transition: all 0.2s ease-in-out;
+    padding: 10px;
+    background-color: transparent;
+}
+
+.back-left {
+    margin: 10px 0;
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+    align-items: center;
+    padding: 10px;
+    background-color: transparent;
+}
+
+.back-left:hover {
+    cursor: pointer;
+    border: 1px solid #0c38b3;
+}
+
+.select-span {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    padding: 6px 10px;
+    align-items: center;
+    margin: 3px 10px;
+}
+
+.select-span:hover {
+    border-bottom: 1px solid var(--black);
+    cursor: pointer;
+}
+
+.selectedSpan {
+    border-bottom: 1px solid var(--black);
+    cursor: pointer;
+}
+
+
+/* text Box */
+
+.input-div {
+    width: 100%;
+    border: 1px solid #ececec;
+    padding: 0;
+    display: block;
+    position: relative;
+    transform: translateZ(0);
+    margin: 5px 0;
+    border-radius: 6px;
+}
+
+.input-div:hover {
+    background-color: #ececec;
+}
+
+._381fS {
+    background-color: transparent;
+    line-height: normal;
+    outline: none;
+    height: 70px;
+    width: 100%;
+    font-size: 15px;
+    margin: 0;
+    padding: 0 20px;
+    padding-top: 22px;
+    box-shadow: none;
+    box-sizing: border-box;
+    border-radius: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 500;
+    border: none;
+}
+
+._26LFr {
+    -ms-transform: translateY(70%);
+    transform: translateY(70%);
+}
+
+._25qBi {
+    position: relative;
+    clear: both;
+}
+
+._2-hTu {
+    clear: both;
+    margin-top: 20px;
+}
+
+._2tL9P {
+    font-size: 12px;
+    font-weight: 500;
+    color: #7e808c;
+    -ms-transform: translateY(-70%);
+    transform: translateY(-70%);
+}
+
+._1Cvlf {
+    position: absolute;
+    left: 0;
+    bottom: 24px;
+    padding-left: 20px;
+    line-height: 20px;
+    font-size: 15px;
+    cursor: text;
+    transition: .2s ease;
+    width: 100%;
+    color: #93959f;
+    will-change: transform, color, font-size;
+    pointer-events: none;
+    font-weight: 400;
+}
+
+._2EeI1 {
+    position: absolute;
+    right: 20px;
+    bottom: 26px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #5d8ed5;
+    transform: translateZ(0);
+    cursor: pointer;
+    will-change: transform;
+    transition: .2s ease;
+}
+
+._2REYC {
+    width: 100%;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    border: none;
+    line-height: 40px;
+    font-size: 14px;
+    font-weight: 600;
+    height: 40px;
+    padding: 0 2rem;
+    letter-spacing: 0;
+    color: #fff;
+    background-color: #465ab2;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 12%);
+    border-radius: 6px;
+}

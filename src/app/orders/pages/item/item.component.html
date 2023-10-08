@@ -1,0 +1,27 @@
+<div class="container" style="margin: 2px 0;border-bottom: 1px solid #ddd;padding: 5px 0;">
+
+    <div class="y-flex">
+        <span>{{order.reference}}</span>
+        <span>{{order.dateCreated | date: 'dd/MM/yyyy'}}</span>
+        <span>{{order.total | currency: 'GBP'}}</span>
+        <span>{{order.status | titlecase}}</span>
+        <div class="h-flex">
+            <button class="bt-button btn-c-g">Accept</button>
+            <button class="bt-button btn-c-o">Reject</button>
+        </div>
+    </div>
+
+</div>
+
+<ng-template #content let-modal>
+    <div class="modal-body">
+        <div class="y-flex">
+            <button *ngIf="order.status !== 'ACCEPTED' && order.status !== 'REFUNDED' && order.status !== 'CANCELLED' && order.status !== 'COLLECTED'  && order.status !== 'DELIVERED'" class="bt-button btn-g" (click)="updateStatus('ACCEPTED')">Accept</button>
+            <button *ngIf="order.status !== 'REJECTED' && order.status !== 'REFUNDED' && order.status !== 'CANCELLED' && order.status !== 'COLLECTED'  && order.status !== 'DELIVERED'" class="bt-button btn-d" (click)="updateStatus('REJECTED')">Reject</button>
+            <button *ngIf="order.status === 'REJECTED'" class="bt-button btn-p" (click)="updateStatus('REFUNDED')">Refund</button>
+            <button *ngIf="order.status === 'ACCEPTED'" class="bt-button btn-p" (click)="updateStatus('DELIVERED')">Delivered</button>
+            <button *ngIf="order.status === 'ACCEPTED'" class="bt-button btn-p" (click)="updateStatus('COLLECTED')">Collected</button>
+            <button *ngIf="order.status === 'ACCEPTED'" class="bt-button btn-p" (click)="updateStatus('PROCESSING')">Processing</button>
+        </div>
+    </div>
+</ng-template>

@@ -1,0 +1,205 @@
+<div class="container">
+
+    <div class="h-flex" style="padding: 10px 0;">
+        <img src="/assets/icons/left-arrow.png" loading="lazy" class="back-left" (click)="goBack()">
+        <div class="y-flex">
+            <span style="font-size: x-large;">Orders</span>
+        </div>
+    </div>
+
+    <div class="y-flex">
+        <div class="between" style="border-bottom: 1px solid var(--border);padding: 5px;">
+            <span><b>Period</b> : {{selectedPeriod}}</span>
+            <div class="h-flex gap">
+                <button class="bt-button" (click)="selectPeriod('Last Month')">Last Month</button>
+                <button class="bt-button" (click)="selectPeriod('This Week')">This Week</button>
+                <button class="bt-button" (click)="selectPeriod('This Month')">All Month</button>
+            </div>
+        </div>
+        <div class="h-flex p-2 sm md">
+            <mat-form-field>
+                <mat-label>Select period</mat-label>
+                <mat-select (selectionChange)="selectPeriodEvent($event)">
+                    <mat-option *ngFor="let period of periods" [value]="period">
+                        {{period}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Select status</mat-label>
+                <mat-select (selectionChange)="selectStatus($event)">
+                    <mat-option *ngFor="let status of statuses" [value]="status">
+                        {{status}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="table">
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table table table-responsive-md">
+                <!-- Position Column -->
+                <ng-container matColumnDef="Reference">
+                    <th mat-header-cell *matHeaderCellDef>Reference</th>
+                    <td mat-cell *matCellDef="let order" (click)="open(orderContent,'lg', order)">
+                        {{order.reference}}</td>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="Date">
+                    <th mat-header-cell *matHeaderCellDef> Date </th>
+                    <td mat-cell *matCellDef="let order"> {{order.dateCreated | date: 'dd/MM/yyyy'}} </td>
+                </ng-container>
+
+                <!-- Weight Column -->
+                <ng-container matColumnDef="Customer">
+                    <th mat-header-cell *matHeaderCellDef> Customer </th>
+                    <td mat-cell *matCellDef="let order">
+                        {{order.customer.name}} </td>
+                </ng-container>
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="Amount">
+                    <th mat-header-cell *matHeaderCellDef> Amount </th>
+                    <td mat-cell *matCellDef="let order"> {{order.total | currency: 'GBP'}} </td>
+                </ng-container>
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="Status">
+                    <th mat-header-cell *matHeaderCellDef> Status </th>
+                    <!-- [ngStyle]="{'color': order.status == 'PAID'? 'green':'blue'}" -->
+                    <td mat-cell *matCellDef="let order" [ngClass]="order.status == 'PAID'? 'text-success':'text-primary'">
+                        {{order.status | titlecase}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Action">
+                    <th mat-header-cell *matHeaderCellDef> Action </th>
+                    <td mat-cell *matCellDef="let order">
+                        <button class="bt-button" (click)="open(actionContent,'sm', order)">...</button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<ng-template #actionContent let-modal>
+    <div style="width: 300px;padding: 20px;">
+        <div class="y-flex">
+            <button *ngIf="actionOnOrder.status !== 'ACCEPTED' && actionOnOrder.status !== 'REFUNDED' && actionOnOrder.status !== 'CANCELLED' && actionOnOrder.status !== 'COLLECTED'  && actionOnOrder.status !== 'DELIVERED'" class="bt-button btn-md" (click)="updateStatus('ACCEPTED')">Accept</button>
+            <button *ngIf="actionOnOrder.status !== 'REJECTED' && actionOnOrder.status !== 'REFUNDED' && actionOnOrder.status !== 'CANCELLED' && actionOnOrder.status !== 'COLLECTED'  && actionOnOrder.status !== 'DELIVERED'" class="bt-button btn-md" (click)="updateStatus('REJECTED')">Reject</button>
+            <button *ngIf="actionOnOrder.status === 'REJECTED'" class="bt-button btn-md" (click)="updateStatus('REFUNDED')">Refund</button>
+            <button *ngIf="actionOnOrder.status === 'ACCEPTED'" class="bt-button btn-md" (click)="updateStatus('DELIVERED')">Delivered</button>
+            <button *ngIf="actionOnOrder.status === 'ACCEPTED'" class="bt-button btn-md" (click)="updateStatus('COLLECTED')">Collected</button>
+            <button *ngIf="actionOnOrder.status === 'ACCEPTED'" class="bt-button btn-md" (click)="updateStatus('PROCESSING')">Processing</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #orderContent let-modal>
+    <div class="modal-body">
+        <div class="y-flex">
+            <div style="display: flex;justify-content: space-around;gap: 2rem;flex-wrap: wrap;">
+                <div style="display: flex;flex-direction: column;background-color: #f0efef;padding: 20px;flex-grow: 1;">
+                    <strong style="font-size: 25px; margin-bottom: 10px;">#{{actionOnOrder.reference}}</strong>
+                    <strong>Date: <span style="font-weight: normal;">{{actionOnOrder.dateCreated
+                            | date: 'dd/MM/yyyy'}}</span></strong>
+                    <strong>Service Mode: <span style="font-weight: normal;">{{actionOnOrder.serviceMode
+                            | titlecase}}</span></strong>
+                </div>
+                <div style="display: flex;flex-direction: column;align-items: center;flex-grow: 1;background-color: #f0efef;padding: 10px;">
+                    <strong style="font-size: 15px;margin-bottom: 20px;">Order
+                        Status</strong>
+                    <strong style="font-size: 25px;">{{actionOnOrder.status |
+                        titlecase}}</strong>
+                </div>
+                <div style="display: flex;justify-content: center;align-items: center;flex-grow: 1;background-color: #f0efef;padding: 20px;">
+                    <strong style="font-size: 40px;">{{actionOnOrder.total |
+                        currency :'GBP'}}</strong>
+                </div>
+            </div>
+
+            <div style="display: flex;justify-content: space-between;gap: 1rem;flex-wrap: wrap;">
+                <div *ngIf="actionOnOrder.serviceMode === 'DELIVERY'" style="background-color: #f0efef;padding: 10px;flex-grow: 1;" class="y-flex">
+                    <strong> Deliver to:</strong>
+                    <p>
+                        {{actionOnOrder.customer.address.addressLine1}}
+                        <br> {{actionOnOrder.customer.address.addressLine2}}
+                        <br> {{actionOnOrder.customer.address.city}}
+                        <br> {{actionOnOrder.customer.address.postcode | uppercase}}
+                    </p>
+                </div>
+                <div *ngIf="actionOnOrder.serviceMode === 'COLLECTION'" style="background-color: #f0efef;padding: 10px;flex-grow: 1;" class="y-flex">
+                    <strong>Collect at:</strong>
+                    <p>
+                        {{actionOnOrder.supplier.address.addressLine1}}
+                        <br> {{actionOnOrder.supplier.address.addressLine2}}
+                        <br> {{actionOnOrder.supplier.address.city}}
+                        <br> {{actionOnOrder.supplier.address.postcode | uppercase}}
+                    </p>
+                </div>
+                <div style="background-color: #f0efef;padding: 10px;flex-grow: 1;" class="y-flex">
+                    <strong>Customer</strong>
+                    <p>
+                        {{actionOnOrder.customer.name}}<br> {{actionOnOrder.customer.mobile}}
+                        <br> {{actionOnOrder.customer.email}}
+                    </p>
+                </div>
+            </div>
+
+            <div class="y-flex">
+                <div *ngFor="let item of actionOnOrder.items">
+                    <ng-template *ngTemplateOutlet="templateItem; context: { value:item }"></ng-template>
+                </div>
+            </div>
+            <div *ngIf="actionOnOrder.status !== 'COLLECTED' &&  actionOnOrder.status !== 'DELIVERED'" class="h-flex" style="background-color: #f0efef;padding: 10px;">
+                <button *ngIf="actionOnOrder.status === 'PAID' ||  actionOnOrder.status === 'REJECTED'" class="bt-button btn-md" (click)="openActionConfirmation(actionInteraction,'sm', 'Accept')">Accept</button>
+                <button *ngIf="actionOnOrder.status === 'PAID' ||  actionOnOrder.status === 'ACCEPTED'" class="bt-button btn-md" (click)="updateStatus('Reject')">Reject</button>
+                <button *ngIf="actionOnOrder.status === 'ACCEPTED'" class="bt-button btn-md" (click)="updateStatus('Deliver')">Delivered</button>
+                <button *ngIf="actionOnOrder.status === 'ACCEPTED'" class="bt-button btn-md" (click)="updateStatus('Collect')">Collected</button>
+                <button *ngIf="actionOnOrder.status === 'REJECTED'" class="bt-button btn-md" (click)="updateStatus('Refund')">Refund</button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #actionInteraction let-modal>
+    <div style="padding: 20px;">
+        <div class="y-flex">
+            <p>
+                Have you gone though the items? Are you sure want to perform this?
+            </p>
+            <button class="bt-button btn-md" (click)="updateStatus(action)">{{action | titlecase}}</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #templateItem let-item="value">
+    <div class="order-item-wrapper">
+        <div class="flex-column" style="width: 100%;">
+            <div style="width: 100%;clear: both; display: flex; justify-content: space-between;">
+                <div class="h-flex">
+                    <strong><small>{{item.name}}</small></strong> (
+                    <strong><small>{{item.quantity}}</small></strong>
+                    <strong><small>{{item.price | currency :'GBP'}}</small></strong> )
+                </div>
+                <strong><small>{{item.subTotal | currency: 'GBP'}}</small></strong>
+            </div>
+            <div *ngIf="item.choice !== null && item.choice !== undefined">
+                <div style="width: 100%;clear: both; display: flex; justify-content: space-between;">
+                    <span style="font-style: italic;">({{item.choice.name}})</span>
+                    <span>{{item.choice.price | currency: 'GBP'}}</span>
+                </div>
+            </div>
+            <div *ngIf="item.extras !== null && item.extras !== undefined && item.extras.length > 0">
+                <div style="width: 100%;clear: both; display: flex; justify-content: space-between;" *ngFor="let extra of item.extras">
+                    <span>{{extra.name}}</span>
+                    <span>{{extra.price | currency: 'GBP'}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</ng-template>

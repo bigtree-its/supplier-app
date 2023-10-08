@@ -1,0 +1,46 @@
+<div style="display: flex;">
+    <div style="background-color: #ddd;height: 100vh;width: 50%;align-items: center;display: flex;justify-content: center;">
+        <span style="font-size: 50px;">BEKU</span>
+    </div>
+    <div style="background-color: #eee;height: 100vh;width: 50%;display: flex;justify-content: center;align-items: center;">
+        <div class="y-flex">
+            <span style="border-bottom: 5px solid #111;">Register</span>
+            <form (ngSubmit)="registerUser()" [formGroup]="registerForm">
+                <div class="input-div">
+                    <input type="text" id="firstName" class="form-control _381fS" formControlName="firstName" required/>
+                    <div class="_2EeI1 _26LFr"></div>
+                    <label class="_1Cvlf _2tL9P" for="firstName">First name</label>
+                </div>
+                <div class="input-div">
+                    <input type="text" id="lastName" class="form-control _381fS" formControlName="lastName" required/>
+                    <div class="_2EeI1 _26LFr"></div>
+                    <label class="_1Cvlf _2tL9P" for="firstName">Last name</label>
+                </div>
+                <div class="input-div">
+                    <input type="text" id="email" class="form-control _381fS" formControlName="email" required/>
+                    <div class="_2EeI1 _26LFr"></div>
+                    <label class="_1Cvlf _2tL9P" for="email">Email</label>
+                </div>
+                <div class="input-div">
+                    <input type="text" id="mobile" class="form-control _381fS" formControlName="mobile" required/>
+                    <div class="_2EeI1 _26LFr"></div>
+                    <label class="_1Cvlf _2tL9P" for="mobile">Mobile</label>
+                </div>
+                <div class="input-div">
+                    <input type="password" id="password" class="form-control _381fS" formControlName="password" required/>
+                    <div class="_2EeI1 _26LFr"></div>
+                    <label class="_1Cvlf _2tL9P" for="mobile">Password</label>
+                </div>
+                <div class="input-div">
+                    <input type="text" id="repeatPassword" class="form-control _381fS" formControlName="repeatPassword" required/>
+                    <div class="_2EeI1 _26LFr"></div>
+                    <label class="_1Cvlf _2tL9P" for="repeatPassword">Repeat Password</label>
+                </div>
+                <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                    <button type="submit" class="btn btn-primary btn-lg">Register</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,20 @@
+<div class="container">
+    <div class="between" style="border-bottom: 1px solid var(--border);padding: 5px;">
+        <strong>Orders</strong>
+        <div class="buttons">
+            <button style="border: 1px solid #ddd;background-color: #fff;border-radius: 3px;margin: 0 2px;" (click)="selectPeriod('Week')">This Week</button>
+            <button style="border: 1px solid #ddd;background-color: #fff;border-radius: 3px;margin: 0 2px;" (click)="selectPeriod('Month')">All Month</button>
+        </div>
+    </div>
+    <div class="order-list" style="margin-top: 10px;">
+        <div class="h-flex" style="align-items: center;">
+            <span style="flex-grow: 1;">Reference</span>
+            <span style="flex-grow: 1;">Date</span>
+            <span style="flex-grow: 1;">Amount</span>
+            <span style="flex-grow: 1;">Status</span>
+            <span style="flex-grow: 1;">Action</span>
+        </div>
+        <app-item *ngFor="let order of orders" [order]="order"></app-item>
+    </div>
+
+</div>
