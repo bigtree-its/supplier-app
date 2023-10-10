@@ -102,27 +102,27 @@
     <div class="modal-body">
         <div class="y-flex">
             <div style="display: flex;justify-content: space-around;gap: 2rem;flex-wrap: wrap;">
-                <div style="display: flex;flex-direction: column;background-color: #f0efef;padding: 20px;flex-grow: 1;">
+                <div style="display: flex;flex-direction: column;background-color: var(--info);padding: 20px;flex-grow: 1;">
                     <strong style="font-size: 25px; margin-bottom: 10px;">#{{actionOnOrder.reference}}</strong>
                     <strong>Date: <span style="font-weight: normal;">{{actionOnOrder.dateCreated
                             | date: 'dd/MM/yyyy'}}</span></strong>
                     <strong>Service Mode: <span style="font-weight: normal;">{{actionOnOrder.serviceMode
                             | titlecase}}</span></strong>
                 </div>
-                <div style="display: flex;flex-direction: column;align-items: center;flex-grow: 1;background-color: #f0efef;padding: 10px;">
+                <div style="display: flex;flex-direction: column;align-items: center;flex-grow: 1;background-color: var(--info);padding: 10px;">
                     <strong style="font-size: 15px;margin-bottom: 20px;">Order
                         Status</strong>
                     <strong style="font-size: 25px;">{{actionOnOrder.status |
                         titlecase}}</strong>
                 </div>
-                <div style="display: flex;justify-content: center;align-items: center;flex-grow: 1;background-color: #f0efef;padding: 20px;">
+                <div style="display: flex;justify-content: center;align-items: center;flex-grow: 1;background-color: var(--info);padding: 20px;">
                     <strong style="font-size: 40px;">{{actionOnOrder.total |
                         currency :'GBP'}}</strong>
                 </div>
             </div>
 
             <div style="display: flex;justify-content: space-between;gap: 1rem;flex-wrap: wrap;">
-                <div *ngIf="actionOnOrder.serviceMode === 'DELIVERY'" style="background-color: #f0efef;padding: 10px;flex-grow: 1;" class="y-flex">
+                <div *ngIf="actionOnOrder.serviceMode === 'DELIVERY'" style="background-color: var(--info);padding: 10px;flex-grow: 1;" class="y-flex">
                     <strong> Deliver to:</strong>
                     <p>
                         {{actionOnOrder.customer.address.addressLine1}}
@@ -131,7 +131,7 @@
                         <br> {{actionOnOrder.customer.address.postcode | uppercase}}
                     </p>
                 </div>
-                <div *ngIf="actionOnOrder.serviceMode === 'COLLECTION'" style="background-color: #f0efef;padding: 10px;flex-grow: 1;" class="y-flex">
+                <div *ngIf="actionOnOrder.serviceMode === 'COLLECTION'" style="background-color: var(--info);padding: 10px;flex-grow: 1;" class="y-flex">
                     <strong>Collect at:</strong>
                     <p>
                         {{actionOnOrder.supplier.address.addressLine1}}
@@ -140,7 +140,7 @@
                         <br> {{actionOnOrder.supplier.address.postcode | uppercase}}
                     </p>
                 </div>
-                <div style="background-color: #f0efef;padding: 10px;flex-grow: 1;" class="y-flex">
+                <div style="background-color: var(--info);padding: 10px;flex-grow: 1;" class="y-flex">
                     <strong>Customer</strong>
                     <p>
                         {{actionOnOrder.customer.name}}<br> {{actionOnOrder.customer.mobile}}
@@ -154,7 +154,7 @@
                     <ng-template *ngTemplateOutlet="templateItem; context: { value:item }"></ng-template>
                 </div>
             </div>
-            <div *ngIf="actionOnOrder.status !== 'COLLECTED' &&  actionOnOrder.status !== 'DELIVERED'" class="h-flex" style="background-color: #f0efef;padding: 10px;">
+            <div *ngIf="actionOnOrder.status !== 'COLLECTED' &&  actionOnOrder.status !== 'DELIVERED'" class="h-flex" style="background-color: var(--info);padding: 10px;">
                 <button *ngIf="actionOnOrder.status === 'PAID' ||  actionOnOrder.status === 'REJECTED'" class="bt-button btn-md" (click)="openActionConfirmation(actionInteraction,'sm', 'Accept')">Accept</button>
                 <button *ngIf="actionOnOrder.status === 'PAID' ||  actionOnOrder.status === 'ACCEPTED'" class="bt-button btn-md" (click)="updateStatus('Reject')">Reject</button>
                 <button *ngIf="actionOnOrder.status === 'ACCEPTED'" class="bt-button btn-md" (click)="updateStatus('Deliver')">Delivered</button>

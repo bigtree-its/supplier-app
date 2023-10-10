@@ -11,6 +11,7 @@ import { MenuModule } from './menu/menu.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FontAwesomeModule, FaIconLibrary  } from '@fortawesome/angular-fontawesome';
 import { faCoffee, fas } from '@fortawesome/free-solid-svg-icons';
+import { SharedModule } from './shared';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { faCoffee, fas } from '@fortawesome/free-solid-svg-icons';
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    SharedModule
   ],
   providers: [],
   bootstrap: [AppComponent]
