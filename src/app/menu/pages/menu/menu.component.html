@@ -1,9 +1,86 @@
 <div class="container">
 
-    <div class="h-flex" style="padding: 10px 0;">
-        <img src="/assets/icons/left-arrow.png" loading="lazy" class="back-left" (click)="goBack()">
-        <div class="y-flex">
+    <div class="flex-between" style="padding: 10px 0;">
+        <div class="h-flex">
+            <img src="/assets/icons/left-arrow.png" loading="lazy" class="back-left" (click)="goBack()">
             <span style="font-size: x-large;">Foods</span>
         </div>
+        <div class="h-flex">
+            <button class="bt-button btn-sm" (click)="selectLayout('add')">+ Create</button>
+            <button class="bt-button btn-sm" (click)="selectLayout('list')">All</button>
+        </div>
+
     </div>
+    <ng-container [ngSwitch]="activeLayout">
+        <ng-container *ngSwitchCase="'add'" [ngTemplateOutlet]="addBlock"></ng-container>
+        <ng-container *ngSwitchCase="'list'" [ngTemplateOutlet]="listBlock"></ng-container>
+        <ng-container *ngSwitchCase="'edit'" [ngTemplateOutlet]="editBlock"></ng-container>
+    </ng-container>
+
+    <ng-template #addBlock>
+        <div class="vertical" style="padding: 10px; border: 1px solid var(--light-color);">
+            <form>
+                <div class="input-div">
+                    <input class="_381fS" type="text" name="name" id="name" tabindex="1" autocomplete="off" value [(ngModel)]="name" #ctrl="ngModel">
+                    <div class="_2EeI1 _26LFr"></div>
+                    <label class="_1Cvlf _2tL9P" for="name">Name</label>
+                </div>
+                <div class="input-div">
+                    <input class="_381fS" type="text" name="description" id="password" tabindex="2" autocomplete="off" value [(ngModel)]="description" #ctrl="ngModel">
+                    <div class="_2EeI1 _26LFr"></div>
+                    <label class="_1Cvlf _2tL9P" for="description">Description</label>
+                </div>
+                <div class="h-flex flex-wrap">
+                    <div style="border: 1px solid #ddd;padding: 10px;border-radius: 6px; display: flex; gap: 0.2rem;">
+                        <input class="my-checkbox my-checkbox--teal" type="checkbox" name="vegetarian" value="vegetarian" id="vegetarian" (change)="selectVegetarian($event)">
+                        <label for="vegetarian">Vegetarian</label>
+                    </div>
+                    <mat-form-field>
+                        <mat-label>Spice Level</mat-label>
+                        <mat-select [(value)]="spiceLevel" required>
+                            <mat-option value="mild">Mild</mat-option>
+                            <mat-option value="hot">Hot</mat-option>
+                            <mat-option value="extraHot">ExtraHot</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            Spice Level
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item">Mild</a></li>
+                            <li><a class="dropdown-item">Hot</a></li>
+                            <li><a class="dropdown-item">Extra Hot</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+
+    <ng-template #listBlock>
+        <div class="y-flex flex-gap">
+            <div *ngFor="let menu of menus">
+                <div class="h-flex" style="width: 100%;background-color: aliceblue;padding: 6px;">
+                    <div class="image-div">
+                        <img src={{menu.image}} height="100%" width="40px">
+                    </div>
+                    <div class="y-flex flex-grow">
+                        <span>{{menu.name}}</span>
+                        <span>{{menu.description}}</span>
+                    </div>
+                    <div class="y-flex">
+                        <span>{{menu.price | currency:'GBP'}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #editBlock>
+        <div class="vertical" style="width: 420px;padding: 10px; border: 1px solid var(--light-color);">
+
+        </div>
+    </ng-template>
+
 </div>

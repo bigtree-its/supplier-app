@@ -1,0 +1,24 @@
+/* Border */
+
+.mat-form-field-appearance-outline .mat-form-field-outline {
+    color: white;
+}
+
+
+/* Font color */
+
+input.mat-input-element {
+    color: white;
+}
+
+input.mat-form-field {
+    color: white;
+}
+
+input.mat-form-field {
+    border: none;
+}
+
+input.mat-select {
+    border: none;
+}

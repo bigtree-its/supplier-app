@@ -9,7 +9,7 @@
 <ng-template #homeBlock>
     <div class="vertical" style="width: 420px;padding: 10px; border: 1px solid var(--light-color);">
         <button class="bt-button" (click)="selectLayout('dashboard')">Dashboard</button>
-        <button class="bt-button" (click)="selectLayout('payment')">Orders</button>
+        <button class="bt-button" [routerLink]="[ '/orders']">Orders</button>
         <button class="bt-button" [routerLink]="[ '/foods']">Foods</button>
         <button class="bt-button">Profile</button>
     </div>

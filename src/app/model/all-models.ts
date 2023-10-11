@@ -170,18 +170,20 @@ export class LocalArea {
     country: string;
 }
 
-export class Food {
+export class Menu {
     _id: string;
-    supplierId: string;
-    category: string;
+    chefId: string;
+    collectionId: string;
     image: string;
     vegetarian: boolean;
+    discounted: boolean;
     spice: number;
     extras: Extra[];
     choices: Extra[];
     description: string;
     name: string;
     price: number;
+    discountedPrice: number;
     active: boolean;
     createdAt: Date;
     updatedAt: Date;
