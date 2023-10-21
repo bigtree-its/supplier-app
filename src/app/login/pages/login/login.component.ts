@@ -12,7 +12,8 @@ import { FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Utils } from 'src/app/helpers/utils';
 import { AccountService } from 'src/app/services/account.service';
-import { LoginResponse } from 'src/app/model/all-models';
+import { Chef, LoginResponse } from 'src/app/model/all-models';
+import { ProfileService } from 'src/app/services/profile.service';
 
 @Component({
   selector: 'app-login',
@@ -33,7 +34,8 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private utils: Utils,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private profileSvc: ProfileService
   ) {}
 
   ngOnInit(): void {
@@ -64,6 +66,14 @@ export class LoginComponent implements OnInit {
         if (response.success === true) {
           sessionStorage.setItem('loginSession', JSON.stringify(response));
           this.router.navigate(['home']);
+          this.profileSvc.getProfile(this.email).subscribe(
+            (res) =>{
+              var chef:Chef = res;
+              localStorage.setItem("chef", JSON.stringify(chef));
+            },
+            (err) =>{},
+          );
+
         } else {
           this.error = response.message;
         }

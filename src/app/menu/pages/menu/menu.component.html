@@ -3,7 +3,7 @@
     <div class="flex-between" style="padding: 10px 0;">
         <div class="h-flex">
             <img src="/assets/icons/left-arrow.png" loading="lazy" class="back-left" (click)="goBack()">
-            <span style="font-size: x-large;">Foods</span>
+            <span style="font-size: x-large;">menus</span>
         </div>
         <div class="h-flex">
             <button class="bt-button btn-sm" (click)="selectLayout('add')">+ Create</button>
@@ -16,71 +16,142 @@
         <ng-container *ngSwitchCase="'list'" [ngTemplateOutlet]="listBlock"></ng-container>
         <ng-container *ngSwitchCase="'edit'" [ngTemplateOutlet]="editBlock"></ng-container>
     </ng-container>
+</div>
 
-    <ng-template #addBlock>
-        <div class="vertical" style="padding: 10px; border: 1px solid var(--light-color);">
-            <form>
-                <div class="input-div">
-                    <input class="_381fS" type="text" name="name" id="name" tabindex="1" autocomplete="off" value [(ngModel)]="name" #ctrl="ngModel">
-                    <div class="_2EeI1 _26LFr"></div>
-                    <label class="_1Cvlf _2tL9P" for="name">Name</label>
+
+<ng-template #addBlock>
+    <div class="vertical" style="padding: 10px; border: 1px solid var(--light-color);">
+        <form>
+            <div class="input-div">
+                <input class="_381fS" type="text" name="name" id="name" tabindex="1" autocomplete="off" value [(ngModel)]="name" #ctrl="ngModel">
+                <div class="_2EeI1 _26LFr"></div>
+                <label class="_1Cvlf _2tL9P" for="name">Name</label>
+            </div>
+            <div class="input-div">
+                <input class="_381fS" type="text" name="description" id="password" tabindex="2" autocomplete="off" value [(ngModel)]="description" #ctrl="ngModel">
+                <div class="_2EeI1 _26LFr"></div>
+                <label class="_1Cvlf _2tL9P" for="description">Description</label>
+            </div>
+            <div class="h-flex flex-wrap">
+                <div style="border: 1px solid #ddd;padding: 10px;border-radius: 6px; display: flex; gap: 0.2rem;">
+                    <input class="my-checkbox my-checkbox--teal" type="checkbox" name="vegetarian" value="vegetarian" id="vegetarian" (change)="selectVegetarian($event)">
+                    <label for="vegetarian">Vegetarian</label>
                 </div>
-                <div class="input-div">
-                    <input class="_381fS" type="text" name="description" id="password" tabindex="2" autocomplete="off" value [(ngModel)]="description" #ctrl="ngModel">
-                    <div class="_2EeI1 _26LFr"></div>
-                    <label class="_1Cvlf _2tL9P" for="description">Description</label>
-                </div>
-                <div class="h-flex flex-wrap">
-                    <div style="border: 1px solid #ddd;padding: 10px;border-radius: 6px; display: flex; gap: 0.2rem;">
-                        <input class="my-checkbox my-checkbox--teal" type="checkbox" name="vegetarian" value="vegetarian" id="vegetarian" (change)="selectVegetarian($event)">
-                        <label for="vegetarian">Vegetarian</label>
-                    </div>
-                    <mat-form-field>
-                        <mat-label>Spice Level</mat-label>
-                        <mat-select [(value)]="spiceLevel" required>
-                            <mat-option value="mild">Mild</mat-option>
-                            <mat-option value="hot">Hot</mat-option>
-                            <mat-option value="extraHot">ExtraHot</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <mat-form-field>
+                    <mat-label>Spice Level</mat-label>
+                    <mat-select [(value)]="spiceLevel" required>
+                        <mat-option value="mild">Mild</mat-option>
+                        <mat-option value="hot">Hot</mat-option>
+                        <mat-option value="extraHot">ExtraHot</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                             Spice Level
                         </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item">Mild</a></li>
-                            <li><a class="dropdown-item">Hot</a></li>
-                            <li><a class="dropdown-item">Extra Hot</a></li>
-                        </ul>
-                    </div>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item">Mild</a></li>
+                        <li><a class="dropdown-item">Hot</a></li>
+                        <li><a class="dropdown-item">Extra Hot</a></li>
+                    </ul>
                 </div>
-            </form>
-        </div>
-    </ng-template>
+            </div>
+        </form>
+    </div>
+</ng-template>
 
-    <ng-template #listBlock>
-        <div class="y-flex flex-gap">
-            <div *ngFor="let menu of menus">
-                <div class="h-flex" style="width: 100%;background-color: aliceblue;padding: 6px;">
-                    <div class="image-div">
-                        <img src={{menu.image}} height="100%" width="40px">
-                    </div>
-                    <div class="y-flex flex-grow">
-                        <span>{{menu.name}}</span>
-                        <span>{{menu.description}}</span>
-                    </div>
-                    <div class="y-flex">
-                        <span>{{menu.price | currency:'GBP'}}</span>
-                    </div>
+<ng-template #listBlock>
+    <div class="y-flex flex-gap">
+        <div *ngFor="let menu of menus">
+            <div class="h-flex" style="width: 100%;background-color: aliceblue;padding: 6px;">
+                <div class="image-div">
+                    <img src={{menu.image}} height="100%" width="40px">
+                </div>
+                <div class="y-flex flex-grow">
+                    <span>{{menu.name}}</span>
+                    <span>{{menu.description}}</span>
+                </div>
+                <div class="y-flex">
+                    <span>{{menu.price | currency:'GBP'}}</span>
                 </div>
             </div>
         </div>
-    </ng-template>
+    </div>
+</ng-template>
 
-    <ng-template #editBlock>
-        <div class="vertical" style="width: 420px;padding: 10px; border: 1px solid var(--light-color);">
+<ng-template #editBlock>
 
+    <div *ngIf="displayEditMenuItem">
+        <span style="margin: 10px 0;padding: 5px 0;border-bottom: 1px solid #e2e2e2;">{{menuEditPanelTitle}}</span>
+        <div class="d-flex flex-start align-items-center" style="margin: 20px 0;">
+            <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-outline-primary" id="collectionDropDown" ngbDropdownToggle>collection</button>
+                <div class="dropdown-menu" aria-labelledby="collectionDropDown" ngbDropdownMenu>
+                    <button class="dropdown-item" *ngFor="let collection of chef.collections" (click)="selectCollection(collection)">{{collection}}
+                                    </button>
+                </div>
+            </div>
+            <span style="margin-left: 10px;">{{selectedCollection}}</span>
         </div>
-    </ng-template>
+        <div class="input-div">
+            <input class="_381fS" type="text" name="itemName" id="menuName" tabindex="4" autocomplete="off" value="" [(ngModel)]="itemName" #ctrl="ngModel" placeholder="Vegetable Biryani">
+            <div class="_2EeI1 _26LFr"></div>
+            <label class="_1Cvlf _2tL9P " for="itemName">Name</label>
+        </div>
+        <div class="input-div">
+            <input class="_381fS" type="text" name="itemDesc" id="itemDesc" tabindex="4" autocomplete="off" value="" [(ngModel)]="itemDesc" #ctrl="ngModel" placeholder="Item description goes here">
+            <div class="_2EeI1 _26LFr"></div>
+            <label class="_1Cvlf _2tL9P " for="itemDesc">Description</label>
+        </div>
+        <div class="horizontal justify-content-center align-items-center" style="margin: 5px 0;width: 100%;padding: 5px 0;border: 1px solid #ececec;padding: 10px;border-radius: 6px;">
+            <span style="width:70%;padding: 0 10px;">Vegetarian</span>
+            <div style="width:30%;">
+                <input id="check" type="checkbox" (change)="handleVegetarian($event)" checked="{{vegetarian}}" style="height: 20px;width: 20px;">
+            </div>
+        </div>
+        <div class="horizontal justify-content-center align-items-center" style="margin: 5px 0;width: 100%;padding: 5px 0;border: 1px solid #ececec;padding: 10px;border-radius: 6px;">
+            <span style="width:70%;padding: 0 10px;">Spice</span>
+            <div style="width:30%;" class="horizontal">
+                <img src="/assets/icons/jalapeno.png" [class.selectedSpice]="spice > 0" class="spice" placement="top" ngbTooltip="Mild" (click)="selectSpiceLevel(1)">
+                <img src="/assets/icons/jalapeno.png" [class.selectedSpice]="spice > 1" class="spice" placement="top" ngbTooltip="Hot" (click)="selectSpiceLevel(2)">
+                <img src="/assets/icons/jalapeno.png" [class.selectedSpice]="spice > 2" class="spice" placement="top" ngbTooltip="Extra Hot" (click)="selectSpiceLevel(3)">
+            </div>
+        </div>
+        <div style="border: 1px solid #ededf4;">
+            <span style="display: block;padding: 5px 20px;">Price</span>
+            <div class="d-flex flex-start align-items-center" style="padding: 0 20px;">
+                <input value="" [(ngModel)]="itemPrice" #ctrl="ngModel" placeholder="10" name="itemPrice" id="itemPrice" tabindex="4" autocomplete="off" style="border: none;padding: 2px;margin: 0 0 10px 0;width: 60px;font-size: 25px;">
+                <span>GBP</span>
+            </div>
+        </div>
+        <div class="d-flex flex-start" style="margin-top: 30px;">
+            <button type="button" class="btn btn-sm btn-success mr-1" (click)="savemenu()">OK</button>
+            <button type="button" class="btn btn-sm btn-secondary mr-1" (click)="cancelItemEdit()">Cancel</button>
+        </div>
 
-</div>
+    </div>
+
+    <div class="vertical" *ngIf="!displayEditMenuItem">
+        <div class="d-flex justify-content-between align-items-center" style="margin: 5px 0 0 0;background-color: #f8f8f8;padding: 8px 5px;">
+            <span style="font-size: 18px;font-weight: 900;">Your menus
+                                ({{menus.length}})</span>
+            <button placement="top" ngbTooltip="Add New menu" type="button" class="btn btn-sm btn-outline-primary" style="margin: 0 10px;" (click)="onClickAddNewmenu()">Add</button>
+        </div>
+
+        <div class="d-flex flex-start" style="background-color: #f8f8f8;margin-bottom: 7px;">
+            <span [class.selectedCollection]="isCollectionSelected(cat)" *ngFor="let cat of categories" class="collection" (click)="selectcollectionForDisplay(cat)">{{cat}}</span>
+        </div>
+        <div class="vertical" style="max-height: 800px;overflow-y: auto;" *ngIf="menus !== null && menus !== undefined && menus.length > 0">
+            <div [class.hidden]="!isCollectionSelected(menu.collection)" *ngFor="let menu of menus">
+                <div class="d-flex flex-start align-items-center supplier-menu-item" style="width: 100%;padding-right: 10px;">
+                    <div style="width: 95%;">
+                        <app-supplier-menu-item [menu]="menu"></app-supplier-menu-item>
+                    </div>
+                    <button style="margin: 0 5px;" class="btn btn-sm btn-outline-primary" (click)="onEditmenu(menu)" placement="top" ngbTooltip="Make changes">Edit</button>
+                    <button style="margin: 0 5px;" class="btn btn-sm btn-outline-danger" (click)="onRemovemenu(menu)" placement="top" ngbTooltip="Remove menu from inventory">Delete</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

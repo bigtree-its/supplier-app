@@ -162,12 +162,62 @@ export class Extra {
     quantity: number;
 }
 
-export class LocalArea {
+export class Cuisine {
+    _id: string;
+    name: string;
+    slug: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export class ServiceArea {
     _id: string;
     name: string;
     city: string;
     slug: string;
     country: string;
+}
+
+export class Chef {
+    _id: string;
+    coverPhoto: string;
+    name: string;
+    email: string;
+    displayName: string;
+    days: string[];
+    description: string[];
+    cuisines: Cuisine[];
+    slots: string[];
+    serviceAreas: ServiceArea[];
+    collections: Collection[];
+    specials: string[];
+    gallery: string[];
+    address: Address;
+    contact: Contact;
+    active: boolean;
+    minimumOrder: number;
+    packagingFee: number;
+    doDelivery: boolean;
+    doPartyOrders: boolean;
+    freeDeliveryOver: number;
+    deliveryMinimum: number;
+    deliveryFee: number;
+    deliveryDistance: number;
+    minimumPartyOrder: number;
+}
+
+export class Contact{
+    person: string;
+    mobile: string;
+    email: string;
+}
+
+export class Collection{
+    _id: string;
+    name: string;
+    chefId: string;
+    slug: String;
+    image: String;
 }
 
 export class Menu {
