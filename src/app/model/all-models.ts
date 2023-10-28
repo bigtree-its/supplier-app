@@ -226,6 +226,7 @@ export class Menu {
     collectionId: string;
     image: string;
     vegetarian: boolean;
+    special: boolean;
     discounted: boolean;
     spice: number;
     extras: Extra[];

@@ -4,6 +4,10 @@
     color: white;
 }
 
+.spice {
+    width: 30px;
+    height: 30px;
+}
 
 /* Font color */
 
@@ -22,3 +26,4 @@ input.mat-form-field {
 input.mat-select {
     border: none;
 }
+

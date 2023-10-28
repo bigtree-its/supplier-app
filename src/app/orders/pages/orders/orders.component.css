@@ -62,7 +62,14 @@ table.table th {
     padding: 5px;
 }
 
-
+.li-order{
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px 10px;
+}
+.li-order:hover{
+    background-color: #ddd;
+}
 /* Mobile */
 
 @media (min-width: 400px) {

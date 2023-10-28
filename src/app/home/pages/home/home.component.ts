@@ -18,13 +18,11 @@ export class HomeComponent {
   ngOnInit() {
     this.activeLayout = 'home';
     var chefJson = localStorage.getItem('chef');
-    window.alert(chefJson)
     if (chefJson !== null && chefJson !== undefined) {
       this.chef = JSON.parse(chefJson);
       this.menuSvc.getMenus(this.chef._id).subscribe(
         (res) => {
           this.menus = res;
-          window.alert(JSON.stringify(res))
         },
         (err) => {}
       );

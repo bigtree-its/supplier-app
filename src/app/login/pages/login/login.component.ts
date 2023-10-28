@@ -6,8 +6,6 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { NgIf } from '@angular/common';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Utils } from 'src/app/helpers/utils';
@@ -71,7 +69,9 @@ export class LoginComponent implements OnInit {
               var chef:Chef = res;
               localStorage.setItem("chef", JSON.stringify(chef));
             },
-            (err) =>{},
+            (err) =>{
+              window.alert('Err: Login')
+            },
           );
 
         } else {

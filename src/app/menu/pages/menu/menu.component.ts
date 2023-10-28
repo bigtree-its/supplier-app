@@ -1,7 +1,11 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { LoginResponse, Menu } from 'src/app/model/all-models';
+import { Chef, Collection, Extra, LoginResponse, Menu } from 'src/app/model/all-models';
 import { MenuService } from 'src/app/services/menu.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { ProfileService } from 'src/app/services/profile.service';
 
 @Component({
   selector: 'app-menu',
@@ -10,41 +14,114 @@ import { MenuService } from 'src/app/services/menu.service';
 })
 export class MenuComponent implements OnInit {
   activeLayout: string = '';
+  subLayout: string = '';
+
   name: string = '';
   description: string;
-  spiceLevel: string;
+  spiceLevel: number = 1;
   loginSessionJson: string;
   menus: Menu[];
+  specials: Menu[];
   menu: Menu;
-  displayEditMenuItem:boolean;
+  displayEditMenuItem: boolean;
+
+  collectionForm: FormGroup;
 
   menuOnEdit: Menu;
-  itemName:string;
-  itemDesc:string;
-  itemPrice:number;
-  spice:number;
-  itemDiscountedPrice:string;
-  vegetarian:boolean;
+  itemName: string;
+  itemDesc: string;
+  itemPrice: number;
+  itemDiscountedPrice: string;
+  vegetarian: boolean;
   doPartyOrders: boolean;
   doDelivery: boolean;
-  selectedCollection: string;
+  selectedCollection: Collection;
   supplierEmail: string;
   menuEditPanelTitle: string;
-  selectedCollectionForDisplay: string;
+  selectedCollectionForDisplay: Collection;
+  chef: Chef;
+  collections: Collection[];
+  collectionName: string;
+  menuOnView: Menu;
+  newMenu: Menu;
+  menuNameErr: boolean;
+  menuNameErrMsg: string;
+  menuDescErr: boolean;
+  menuDescErrMsg: string;
+  menuPriceErr: boolean;
+  menuPriceErrMsg: string;
+  menuCollErr: boolean;
+  menuCollErrMsg: string;
 
-  constructor(private _location: Location, private menuSvc: MenuService) {}
+  choice: string;
+  choices: Extra[] = [];
+
+  extra: string;
+  extras: Extra[] = [];
+
+  states = [
+    { name: 'Arizona', abbrev: 'AZ' },
+    { name: 'California', abbrev: 'CA' },
+    { name: 'Colorado', abbrev: 'CO' },
+    { name: 'New York', abbrev: 'NY' },
+    { name: 'Pennsylvania', abbrev: 'PA' },
+  ];
+
+  form = new FormGroup({
+    collection: new FormControl(null),
+  });
+  spiceLevelChanged: boolean;
+  err: boolean;
+  errMsg: string;
+  special: boolean;
+  choicePrice: any;
+
+  constructor(private _location: Location,
+    private profileSvc: ProfileService,
+    private menuSvc: MenuService,
+    private modalSvc: NgbModal,
+    private router: Router,
+    private formBuilder: FormBuilder) { }
+
 
   ngOnInit(): void {
-    this.loginSessionJson = sessionStorage.getItem('loginSession');
-    if (this.loginSessionJson !== null && this.loginSessionJson !== undefined) {
-      var session: LoginResponse = JSON.parse(this.loginSessionJson);
-      this.supplierEmail = session.email;
-      this.fetchMenus();
+
+    this.activeLayout = "Home";
+    var chefJson = localStorage.getItem("chef");
+    if (chefJson !== null && chefJson !== undefined) {
+      this.chef = JSON.parse(chefJson)[0];
+      this.fetchCollections(this.chef._id);
+      this.fetchMenus(this.chef._id);
+    } else {
+      this.loginSessionJson = sessionStorage.getItem('loginSession');
+      if (this.loginSessionJson !== null && this.loginSessionJson !== undefined) {
+        var session: LoginResponse = JSON.parse(this.loginSessionJson);
+        this.supplierEmail = session.email;
+        this.profileSvc.getProfile(session.email).subscribe(
+          (res) => {
+            this.chef = res;
+            localStorage.setItem("chef", JSON.stringify(this.chef));
+            this.fetchCollections(this.chef._id);
+            this.fetchMenus(this.chef._id);
+          },
+          (err) => {
+            window.alert('Err: Unable to fetch your profile')
+          },
+        );
+      } else {
+        this.router.navigate(['login']);
+      }
     }
   }
 
-  selectLayout(e: string){
-    this.activeLayout = e;
+
+  selectActiveLayout(main: string, sub: string) {
+    this.activeLayout = main;
+    this.subLayout = sub;
+  }
+
+  selectSubLayout(sub: string) {
+    this.subLayout = sub;
   }
 
   goBack() {
@@ -59,13 +136,8 @@ export class MenuComponent implements OnInit {
     }
   }
 
-   selectSpiceLevel(level: number){
-    this.spice = level;
-    console.log('Spice Level: '+ this.spice);
-  }
-
-  selectCollection(collection: string) {
-    this.selectedCollection = collection;
+  onChangeCollection(newValue: any) {
+    this.selectedCollection = this.form.controls['collection'].value;
   }
 
   handleVegetarian(evt) {
@@ -74,6 +146,15 @@ export class MenuComponent implements OnInit {
       this.vegetarian = true;
     } else {
       this.vegetarian = false;
+    }
+  }
+
+  handleSpecial(evt) {
+    var target = evt.target;
+    if (target.checked) {
+      this.special = true;
+    } else {
+      this.special = false;
     }
   }
 
@@ -97,19 +178,15 @@ export class MenuComponent implements OnInit {
 
   onRemoveFood(foodToDelete: Menu) {
     this.menuSvc.deleteFood(foodToDelete).subscribe(any => {
-      this.fetchMenus();
+      this.fetchMenus(this.chef._id);
     }, err => { });
   }
 
-  fetchMenus() {
-    this.menuSvc.getMenus(this.supplierEmail).subscribe(
+  fetchMenus(chefId: string) {
+    this.menuSvc.getMenus(chefId).subscribe(
       (data: Menu[]) => {
         this.menus = data;
-        if ( data === null || data.length === 0){
-          this.activeLayout= "add";
-        }else{
-          this.activeLayout= "list";
-        }
+        this.specials = this.menus.filter(m => { return m.special });
       },
       (err) => {
         window.alert('Error when fetching the menus');
@@ -117,51 +194,209 @@ export class MenuComponent implements OnInit {
     );
   }
 
-  onEditFood(menuToEdit: Menu) {
+  fetchCollections(chefId: string) {
+    this.menuSvc.getCollections(chefId).subscribe(
+      (data: Collection[]) => {
+        this.collections = data;
+      },
+      (err) => {
+        window.alert('Error when fetching the collections');
+      }
+    );
+  }
+
+  addCollection() {
+    this.subLayout = "addCollection";
+  }
+
+  viewMenu(menu: Menu) {
+    this.menuOnView = menu;
+    this.activeLayout = "view";
+    console.log('Viewing menu ' + JSON.stringify(this.menuOnView))
+  }
+
+  onEditMenu(menuToEdit: Menu) {
+    this.subLayout = "editMenu";
     this.menuOnEdit = menuToEdit;
-    this.displayEditMenuItem = true;
     this.menuEditPanelTitle = menuToEdit.name;
-    this.selectedCollection = menuToEdit.collectionId;
-    this.itemName = menuToEdit.name;
-    this.itemDesc = menuToEdit.description;
-    this.itemPrice = menuToEdit.price;
-    this.vegetarian = menuToEdit.vegetarian;
-    this.spice = menuToEdit.spice;
+
+    var collection: Collection[] = this.collections.filter(e => { return e._id === menuToEdit.collectionId });
+    this.form.controls['collection'].patchValue(collection[0]);
   }
 
-  selectCategoryForDisplay(collection: string) {
-    this.selectedCollectionForDisplay = collection;
+  compareFn(c1: any, c2: any): boolean {
+    return c1 && c2 ? c1.id === c2.id : c1 === c2;
   }
 
-  isCollectionSelected(collection: string) {
-    return this.selectedCollectionForDisplay === collection;
+  onRemoveMenu(menu: Menu) {
+
   }
 
-  onClickAddNewFood() {
-    this.displayEditMenuItem = true;
-    this.vegetarian = false;
-    this.spice = 1;
-    this.menuEditPanelTitle = "Create New Food";
+  setActiveLayout(layout: string) {
+    this.activeLayout = layout;
   }
 
-  cancelItemEdit() {
-    this.displayEditMenuItem = false;
-    this.itemName = "";
-    this.itemDesc = "";
-    this.itemPrice = 0;
-    this.spice = 1;
-    this.vegetarian = false;
-    this.selectedCollection = "";
-    this.menuOnEdit = null;
+  onClickAddNewMenu() {
+    this.activeLayout = "add";
+  }
+  selectCollectionForDisplay(col: Collection) {
+    this.selectedCollectionForDisplay = col;
   }
 
-  clearFoodEdit() {
-    this.itemName = "";
-    this.itemDesc = "";
-    this.itemPrice = 0;
-    this.spice = 1;
-    this.vegetarian = false;
-    this.selectedCollection = "";
+  isCollectionSelected(col: Collection) {
+    if (this.selectedCollectionForDisplay === null || this.selectedCollectionForDisplay === undefined) {
+      this.selectedCollectionForDisplay = this.collections[0];
+    }
+    return this.selectedCollectionForDisplay._id === col._id;
   }
 
+  saveMenu() {
+    if (this.newMenu !== null && this.newMenu !== undefined) {
+      if (this.spiceLevelChanged) {
+        this.newMenu.spice = this.spiceLevel;
+      }
+      if (this.form.controls['collection'].value === null) {
+        this.err = true;
+        this.errMsg = "Collection is required";
+        return;
+      }
+      this.newMenu.collectionId = this.form.controls['collection'].value._id;
+      if (this.newMenu.name === null || this.newMenu.name === undefined) {
+        this.err = true;
+        this.errMsg = "Name is required.";
+        return;
+      } else {
+        this.err = false;
+      }
+      if (this.newMenu.description === null || this.newMenu.description === undefined) {
+        this.err = true;
+        this.errMsg = "Description is required.";
+        return;
+      } else {
+        this.err = false;
+      }
+      if (this.newMenu.price === 0 || this.newMenu.price === undefined) {
+        this.err = true;
+        this.errMsg = "Price is required.";
+        return;
+      } else {
+        this.err = false;
+      }
+      this.newMenu.vegetarian = this.vegetarian;
+      this.newMenu.special = this.special;
+     
+      this.menuSvc.createNewFood(this.newMenu).subscribe(
+        (res) => {
+          this.newMenu = null;
+          this.menuOnEdit = null;
+          this.spiceLevelChanged = false;
+          this.fetchMenus(this.chef._id);
+          this.activeLayout = "Menus";
+          this.selectSubLayout('listMenu');
+        },
+        (err) => { },
+      );
+    }
+    else {
+      var collection: Collection = this.form.controls['collection'].value;
+      this.menuOnEdit.collectionId = collection._id;
+      if (this.spiceLevelChanged) {
+        this.menuOnEdit.spice = this.spiceLevel;
+      }
+      this.menuOnEdit.vegetarian = this.vegetarian;
+      this.menuOnEdit.special = this.special;
+      if (this.menuOnEdit.price === 0 || this.menuOnEdit.price === undefined) {
+        this.err = true;
+        this.errMsg = "Price is required.";
+        return;
+      } else {
+        this.err = false;
+      }
+      this.menuSvc.updateMenu(this.menuOnEdit).subscribe(
+        (res) => {
+          this.newMenu = null;
+          this.menuOnEdit = null;
+          this.spiceLevelChanged = false;
+          this.fetchMenus(this.chef._id);
+          this.selectSubLayout('listMenu');
+        },
+        (err) => { },
+      );
+    }
+  }
+
+  openModal(content) {
+    this.modalSvc
+      .open(content, { ariaLabelledBy: 'modal-basic-title' })
+      .result.then(
+        (result) => { },
+        (reason) => {
+          // this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        }
+      );
+  }
+
+  handleSpiceLevelChange(e) {
+    this.spiceLevel = e.target.value;
+    this.spiceLevelChanged = true;
+  }
+
+  saveNewCollection() {
+    this.menuSvc.saveCollection(this.collectionName, this.chef._id).subscribe(
+      (res) => {
+        var col: Collection = res;
+        this.collections.push(col);
+        this.subLayout = "listCollection"
+      },
+      (err) => { },
+    );
+  }
+
+  cancel() {
+    console.log('Slecting list view')
+    this.activeLayout = "list";
+  }
+
+  addMenu() {
+    this.subLayout = "addMenu";
+    this.newMenu = new Menu();
+    this.newMenu.chefId = this.chef._id;
+  }
+
+  cancelError() {
+    this.err = false;
+    this.errMsg = '';
+  }
+
+  removeCollection(collection: Collection) {
+    this.menuSvc.deleteCollection(collection).subscribe(
+      (res) => {
+        this.fetchCollections(this.chef._id);
+      },
+      (err) => {
+        this.err = true;
+        this.errMsg = 'Unable to delete the collection. Retry later';
+      },
+    );
+  }
+
+  addChoice() {
+    if (this.choice === null || this.choice === undefined || this.choicePrice === 0 || this.choicePrice === undefined) {
+      this.err = true;
+      this.errMsg = "Choice is not valid";
+      return;
+    }
+    this.choices.forEach(e => {
+      if (e.name === this.choice) {
+        this.err = true;
+        this.errMsg = "Choice is already exist";
+        return;
+      }
+    });
+    var choice: Extra = {
+      name: this.choice,
+      price: this.choicePrice
+    }
+    this.choices.push(this.choice);
+  }
 }
