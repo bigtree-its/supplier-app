@@ -53,10 +53,8 @@ export class MenuComponent implements OnInit {
   menuCollErr: boolean;
   menuCollErrMsg: string;
 
-  choice: string;
+  extra: Extra = new Extra();
   choices: Extra[] = [];
-
-  extra: string;
   extras: Extra[] = [];
 
   states = [
@@ -75,6 +73,7 @@ export class MenuComponent implements OnInit {
   errMsg: string;
   special: boolean;
   choicePrice: any;
+  extraType: string;
 
   constructor(private _location: Location,
     private profileSvc: ProfileService,
@@ -218,6 +217,12 @@ export class MenuComponent implements OnInit {
   onEditMenu(menuToEdit: Menu) {
     this.subLayout = "editMenu";
     this.menuOnEdit = menuToEdit;
+    if ( this.menuOnEdit.choices !== null && this.menuOnEdit.choices !== undefined){
+      this.choices = menuToEdit.choices;
+    }
+    if ( this.menuOnEdit.extras !== null && this.menuOnEdit.extras !== undefined){
+      this.extras = menuToEdit.extras;
+    }
     this.menuEditPanelTitle = menuToEdit.name;
 
     var collection: Collection[] = this.collections.filter(e => { return e._id === menuToEdit.collectionId });
@@ -284,7 +289,8 @@ export class MenuComponent implements OnInit {
       }
       this.newMenu.vegetarian = this.vegetarian;
       this.newMenu.special = this.special;
-     
+      this.newMenu.extras = this.extras;
+      this.newMenu.choices = this.choices;
       this.menuSvc.createNewFood(this.newMenu).subscribe(
         (res) => {
           this.newMenu = null;
@@ -312,6 +318,8 @@ export class MenuComponent implements OnInit {
       } else {
         this.err = false;
       }
+      this.menuOnEdit.extras = this.extras;
+      this.menuOnEdit.choices = this.choices;
       this.menuSvc.updateMenu(this.menuOnEdit).subscribe(
         (res) => {
           this.newMenu = null;
@@ -347,6 +355,7 @@ export class MenuComponent implements OnInit {
         var col: Collection = res;
         this.collections.push(col);
         this.subLayout = "listCollection"
+        this.closeModal();
       },
       (err) => { },
     );
@@ -380,23 +389,59 @@ export class MenuComponent implements OnInit {
     );
   }
 
-  addChoice() {
-    if (this.choice === null || this.choice === undefined || this.choicePrice === 0 || this.choicePrice === undefined) {
+  addExtra() {
+    console.log('Extra '+ JSON.stringify(this.extra))
+    if (this.extra === null || this.extra === undefined || 
+      this.extra.price === 0 || this.extra.price === undefined || 
+      this.extra.name === null || this.extra.name === undefined || this.extra.name.trim().length === 0
+      ) {
       this.err = true;
       this.errMsg = "Choice is not valid";
       return;
     }
     this.choices.forEach(e => {
-      if (e.name === this.choice) {
+      if (e.name.trim() === this.extra.name.trim()) {
         this.err = true;
         this.errMsg = "Choice is already exist";
         return;
       }
     });
-    var choice: Extra = {
-      name: this.choice,
-      price: this.choicePrice
+    if ( this.extraType === 'Choice'){
+      this.choices.push(this.extra);
+    }else{
+      this.extras.push(this.extra);
     }
-    this.choices.push(this.choice);
+    this.err = false;
+    this.errMsg = '';
+    this.extra = new Extra();
+    this.closeModal();
+  }
+
+  openExtraModal(content, dataType){
+    this.extraType = dataType;
+    this.modalSvc
+      .open(content, { ariaLabelledBy: 'modal-basic-title' })
+      .result.then(
+        (result) => { },
+        (reason) => {
+        }
+      );
+  }
+  removeChoice(choice:Extra){
+    for ( var i=0; i< this.choices.length; i++){
+      if ( this.choices[i].name == choice.name){
+        this.choices.splice(i,1);
+      }
+    }
+  }
+  removeExtra(e:Extra){
+    for ( var i=0; i< this.extras.length; i++){
+      if ( this.extras[i].name == e.name){
+        this.extras.splice(i,1);
+      }
+    }
+  }
+  closeModal(){
+    this.modalSvc.dismissAll();
   }
 }

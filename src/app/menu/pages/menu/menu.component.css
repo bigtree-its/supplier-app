@@ -1,7 +1,38 @@
 /* Border */
 
-.mat-form-field-appearance-outline .mat-form-field-outline {
-    color: white;
+.page-header {
+    width: 100%;
+    line-height: 30px;
+    font-weight: bold;
+    height: 30px;
+    margin-bottom: 10px;
+}
+
+.page-header img {
+    height: 30px;
+    width: 30px;
+}
+
+.page-header img:hover {
+    cursor: pointer;
+    color: aquamarine;
+}
+
+.menu-item {
+    display: flex;
+    flex-direction: row;
+    background-color: #f1f1f1;
+    padding: 6px;
+    border-radius: 3px;
+    margin-bottom: 5px;
+    align-items: center;
+    justify-content: center;
+}
+.menu-item-right{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
 }
 
 .spice {
@@ -9,21 +40,14 @@
     height: 30px;
 }
 
-/* Font color */
-
-input.mat-input-element {
-    color: white;
+/** Desktop **/
+@media (min-width: 550px) {
+    
+    .menu-item-right{
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        align-items: center;
+    }
+    
 }
-
-input.mat-form-field {
-    color: white;
-}
-
-input.mat-form-field {
-    border: none;
-}
-
-input.mat-select {
-    border: none;
-}
-

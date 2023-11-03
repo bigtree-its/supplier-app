@@ -20,13 +20,19 @@ export class HomeComponent {
     var chefJson = localStorage.getItem('chef');
     if (chefJson !== null && chefJson !== undefined) {
       this.chef = JSON.parse(chefJson);
-      this.menuSvc.getMenus(this.chef._id).subscribe(
-        (res) => {
-          this.menus = res;
-        },
-        (err) => {}
-      );
+      this.fetchMenus(this.chef._id);
     }
+  }
+
+  fetchMenus(chefId: string) {
+    this.menuSvc.getMenus(chefId).subscribe(
+      (data: Menu[]) => {
+        this.menus = data;
+      },
+      (err) => {
+        window.alert('Error when fetching the menus');
+      }
+    );
   }
 
   selectLayout(layout: string) {

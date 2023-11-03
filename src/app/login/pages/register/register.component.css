@@ -1,0 +1,8 @@
+.reg-left{
+    background-color: #ddd;height: 100vh;width: 50%;align-items: center;display: flex;justify-content: center;
+
+}
+.reg-right{
+    background-color: #eee;height: 100vh;width: 50%;display: flex;justify-content: center;align-items: center;
+}
+
