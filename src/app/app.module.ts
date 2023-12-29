@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
@@ -12,6 +12,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FontAwesomeModule, FaIconLibrary  } from '@fortawesome/angular-fontawesome';
 import { faCoffee, fas } from '@fortawesome/free-solid-svg-icons';
 import { SharedModule } from './shared';
+import { AuthInterceptor } from './services/auth.interceptor';
+import { ProfileModule } from './profile/profile.module';
 
 
 @NgModule({
@@ -25,13 +27,14 @@ import { SharedModule } from './shared';
     HomeModule,
     OrdersModule,
     MenuModule,
+    ProfileModule,
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
     FontAwesomeModule,
     SharedModule
   ],
-  providers: [],
+  providers: [ { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { 

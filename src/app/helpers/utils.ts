@@ -29,9 +29,7 @@ export class Utils {
   }
 
   public isEquals(data1: string, data2: string): Boolean {
-    if ( data1 === data2 ){
-        return true;
-    }
-    return false;
+    console.log('Comparing '+ data1+" and "+ data2)
+    return data1 === data2;
   }
 }

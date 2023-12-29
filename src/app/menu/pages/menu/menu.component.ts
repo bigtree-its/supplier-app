@@ -6,6 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ProfileService } from 'src/app/services/profile.service';
+import { AccountService } from 'src/app/services/account.service';
 
 @Component({
   selector: 'app-menu',
@@ -15,7 +16,7 @@ import { ProfileService } from 'src/app/services/profile.service';
 export class MenuComponent implements OnInit {
   activeLayout: string = '';
   subLayout: string = '';
-
+  leafView: string = undefined;
   name: string = '';
   description: string;
   spiceLevel: number = 1;
@@ -77,6 +78,7 @@ export class MenuComponent implements OnInit {
 
   constructor(private _location: Location,
     private profileSvc: ProfileService,
+    private accountSvc: AccountService,
     private menuSvc: MenuService,
     private modalSvc: NgbModal,
     private router: Router,
@@ -86,30 +88,11 @@ export class MenuComponent implements OnInit {
   ngOnInit(): void {
 
     this.activeLayout = "Home";
-    var chefJson = localStorage.getItem("chef");
-    if (chefJson !== null && chefJson !== undefined) {
-      this.chef = JSON.parse(chefJson)[0];
+    this.chef = this.profileSvc.getCurrentChef();
+    console.log('Local chef: '+ JSON.stringify(this.chef))
+    if ( this.chef !== null && this.chef !== undefined){
       this.fetchCollections(this.chef._id);
       this.fetchMenus(this.chef._id);
-    } else {
-      this.loginSessionJson = sessionStorage.getItem('loginSession');
-      if (this.loginSessionJson !== null && this.loginSessionJson !== undefined) {
-        var session: LoginResponse = JSON.parse(this.loginSessionJson);
-        this.supplierEmail = session.email;
-        this.profileSvc.getProfile(session.email).subscribe(
-          (res) => {
-            this.chef = res;
-            localStorage.setItem("chef", JSON.stringify(this.chef));
-            this.fetchCollections(this.chef._id);
-            this.fetchMenus(this.chef._id);
-          },
-          (err) => {
-            window.alert('Err: Unable to fetch your profile')
-          },
-        );
-      } else {
-        this.router.navigate(['login']);
-      }
     }
   }
 
@@ -117,6 +100,11 @@ export class MenuComponent implements OnInit {
   selectActiveLayout(main: string, sub: string) {
     this.activeLayout = main;
     this.subLayout = sub;
+    if (main !== "Home") {
+      this.leafView = main;
+    } else {
+      this.leafView = undefined;
+    }
   }
 
   selectSubLayout(sub: string) {
@@ -188,7 +176,7 @@ export class MenuComponent implements OnInit {
         this.specials = this.menus.filter(m => { return m.special });
       },
       (err) => {
-        window.alert('Error when fetching the menus');
+        console.error('Error when fetching the menus');
       }
     );
   }

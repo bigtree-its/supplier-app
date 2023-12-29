@@ -1,0 +1,15 @@
+{
+    "headers": {
+        "normalizedNames": {},
+        "lazyUpdate": null
+    },
+    "status": 500,
+    "statusText": "Internal Server Error",
+    "url": "http://localhost:8083/ads/v1/chefs/f7155e59-01b7-412f-9747-c9759dca7770",
+    "ok": false,
+    "name": "HttpErrorResponse",
+    "message": "Http failure response for http://localhost:8083/ads/v1/chefs/f7155e59-01b7-412f-9747-c9759dca7770: 500 Internal Server Error",
+    "error": {
+        "message": "Error updating Chef with id f7155e59-01b7-412f-9747-c9759dca7770"
+    }
+}

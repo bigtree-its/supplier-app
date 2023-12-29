@@ -1,14 +1,48 @@
 <div class="container">
 
-    <div class="h-flex" style="padding: 10px 0;">
-        <img src="/assets/icons/left-arrow.png" loading="lazy" class="back-left" (click)="goBack()">
-        <div class="y-flex">
-            <span style="font-size: x-large;">Orders</span>
+    <div class="section-header">
+        <span style="font-size: x-large;">Orders</span>
+    </div>
+    <div class="h-flex flex-wrap">
+        <div class="info-button y-flex" style="flex-grow: 1;" (click)="displayOrders(profile?.today, 'Today')">
+            <span>Today</span>
+            <span style="font-size: 30px;">{{profile?.today.length}}</span>
+        </div>
+        <div class="info-button y-flex"  style="flex-grow: 1;"(click)="displayOrders(profile?.sevenDays, 'Seven Days')">
+            <span>Week</span>
+            <span style="font-size: 30px;">{{profile?.sevenDays.length}}</span>
+        </div>
+        <div class="info-button y-flex" style="flex-grow: 1;" (click)="displayOrders(profile?.month, 'Month')">
+            <span>Month</span>
+            <span style="font-size: 30px;">{{profile?.month.length}}</span>
+        </div>
+        <div class="info-button y-flex"  style="flex-grow: 1;"(click)="displayOrders(profile?.lastMonth, 'Last Month')">
+            <span>Previous Month</span>
+            <span style="font-size: 30px;">{{profile?.lastMonth.length}}</span>
+        </div>
+        <div class="info-button y-flex" style="flex-grow: 1;" (click)="displayOrders(profile?.sixMonth, 'Six Months')">
+            <span>Six Months</span>
+            <span style="font-size: 30px;">{{profile?.sixMonth.length}}</span>
+        </div>
+        <div class="info-button y-flex"  style="flex-grow: 1;" (click)="displayOrders(profile?.year, 'Year To Date')">
+            <span>Yearly</span>
+            <span style="font-size: 30px;">{{profile?.year.length}}</span>
         </div>
     </div>
 
     <div class="y-flex">
-        <div class="between" style="border-bottom: 1px solid var(--border);padding: 5px;">
+        <strong
+            style="font-size: 25px;padding: 20px 0;margin: 5px 0;background-color: #f5f5f5;">{{selectedPeriod}}</strong>
+        <div
+            *ngIf="(ordersToView === undefined || ordersToView === null || ordersToView.length === 0); then emptyOrders else orderList">
+        </div>
+    </div>
+
+
+
+
+    <!-- <div class="y-flex"> -->
+    <!-- <div class="between" style="border-bottom: 1px solid var(--border);padding: 5px;">
             <span><b>Period</b> : {{selectedPeriod}}</span>
             <div class="h-flex gap">
                 <button class="bt-button" (click)="selectPeriod('Last Month')">Last Month</button>
@@ -25,9 +59,9 @@
                 <span style="min-width: 100px;"> {{order.status | titlecase}}</span>
                 <button class="bt-button" (click)="open(actionContent,'sm', order)">...</button>
             </div>
-        </div>
+        </div> -->
 
-        <!-- <div class="table">
+    <!-- <div class="table">
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table table table-responsive-md">
                
                 <ng-container matColumnDef="Reference">
@@ -70,47 +104,40 @@
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
         </div> -->
-    </div>
+    <!-- </div> -->
 </div>
 
-<ng-template #actionContent let-modal>
-    <div style="width: 300px;padding: 20px;">
-        <div class="y-flex">
-            <button *ngIf="actionOnOrder.status !== 'ACCEPTED' && actionOnOrder.status !== 'REFUNDED' && actionOnOrder.status !== 'CANCELLED' && actionOnOrder.status !== 'COLLECTED'  && actionOnOrder.status !== 'DELIVERED'" class="bt-button btn-md" (click)="updateStatus('ACCEPTED')">Accept</button>
-            <button *ngIf="actionOnOrder.status !== 'REJECTED' && actionOnOrder.status !== 'REFUNDED' && actionOnOrder.status !== 'CANCELLED' && actionOnOrder.status !== 'COLLECTED'  && actionOnOrder.status !== 'DELIVERED'" class="bt-button btn-md" (click)="updateStatus('REJECTED')">Reject</button>
-            <button *ngIf="actionOnOrder.status === 'REJECTED'" class="bt-button btn-md" (click)="updateStatus('REFUNDED')">Refund</button>
-            <button *ngIf="actionOnOrder.status === 'ACCEPTED'" class="bt-button btn-md" (click)="updateStatus('DELIVERED')">Delivered</button>
-            <button *ngIf="actionOnOrder.status === 'ACCEPTED'" class="bt-button btn-md" (click)="updateStatus('COLLECTED')">Collected</button>
-            <button *ngIf="actionOnOrder.status === 'ACCEPTED'" class="bt-button btn-md" (click)="updateStatus('PROCESSING')">Processing</button>
-        </div>
-    </div>
-</ng-template>
 
-<ng-template #orderContent let-modal>
+
+<!-- <ng-template #orderContent let-modal>
     <div class="modal-body">
         <div class="y-flex">
             <div style="display: flex;justify-content: space-around;gap: 2rem;flex-wrap: wrap;">
-                <div style="display: flex;flex-direction: column;background-color: var(--info);padding: 20px;flex-grow: 1;">
+                <div
+                    style="display: flex;flex-direction: column;background-color: var(--info);padding: 20px;flex-grow: 1;">
                     <strong style="font-size: 25px; margin-bottom: 10px;">#{{actionOnOrder.reference}}</strong>
                     <strong>Date: <span style="font-weight: normal;">{{actionOnOrder.dateCreated
                             | date: 'dd/MM/yyyy'}}</span></strong>
                     <strong>Service Mode: <span style="font-weight: normal;">{{actionOnOrder.serviceMode
                             | titlecase}}</span></strong>
                 </div>
-                <div style="display: flex;flex-direction: column;align-items: center;flex-grow: 1;background-color: var(--info);padding: 10px;">
+                <div
+                    style="display: flex;flex-direction: column;align-items: center;flex-grow: 1;background-color: var(--info);padding: 10px;">
                     <strong style="font-size: 15px;margin-bottom: 20px;">Order
                         Status</strong>
                     <strong style="font-size: 25px;">{{actionOnOrder.status |
                         titlecase}}</strong>
                 </div>
-                <div style="display: flex;justify-content: center;align-items: center;flex-grow: 1;background-color: var(--info);padding: 20px;">
+                <div
+                    style="display: flex;justify-content: center;align-items: center;flex-grow: 1;background-color: var(--info);padding: 20px;">
                     <strong style="font-size: 40px;">{{actionOnOrder.total |
                         currency :'GBP'}}</strong>
                 </div>
             </div>
 
             <div style="display: flex;justify-content: space-between;gap: 1rem;flex-wrap: wrap;">
-                <div *ngIf="actionOnOrder.serviceMode === 'DELIVERY'" style="background-color: var(--info);padding: 10px;flex-grow: 1;" class="y-flex">
+                <div *ngIf="actionOnOrder.serviceMode === 'DELIVERY'"
+                    style="background-color: var(--info);padding: 10px;flex-grow: 1;" class="y-flex">
                     <strong> Deliver to:</strong>
                     <p>
                         {{actionOnOrder.customer.address.addressLine1}}
@@ -119,7 +146,8 @@
                         <br> {{actionOnOrder.customer.address.postcode | uppercase}}
                     </p>
                 </div>
-                <div *ngIf="actionOnOrder.serviceMode === 'COLLECTION'" style="background-color: var(--info);padding: 10px;flex-grow: 1;" class="y-flex">
+                <div *ngIf="actionOnOrder.serviceMode === 'COLLECTION'"
+                    style="background-color: var(--info);padding: 10px;flex-grow: 1;" class="y-flex">
                     <strong>Collect at:</strong>
                     <p>
                         {{actionOnOrder.supplier.address.addressLine1}}
@@ -142,18 +170,93 @@
                     <ng-template *ngTemplateOutlet="templateItem; context: { value:item }"></ng-template>
                 </div>
             </div>
-            <div *ngIf="actionOnOrder.status !== 'COLLECTED' &&  actionOnOrder.status !== 'DELIVERED'" class="h-flex" style="background-color: var(--info);padding: 10px;">
-                <button *ngIf="actionOnOrder.status === 'PAID' ||  actionOnOrder.status === 'REJECTED'" class="bt-button btn-md" (click)="openActionConfirmation(actionInteraction,'sm', 'Accept')">Accept</button>
-                <button *ngIf="actionOnOrder.status === 'PAID' ||  actionOnOrder.status === 'ACCEPTED'" class="bt-button btn-md" (click)="updateStatus('Reject')">Reject</button>
-                <button *ngIf="actionOnOrder.status === 'ACCEPTED'" class="bt-button btn-md" (click)="updateStatus('Deliver')">Delivered</button>
-                <button *ngIf="actionOnOrder.status === 'ACCEPTED'" class="bt-button btn-md" (click)="updateStatus('Collect')">Collected</button>
-                <button *ngIf="actionOnOrder.status === 'REJECTED'" class="bt-button btn-md" (click)="updateStatus('Refund')">Refund</button>
+            <div *ngIf="actionOnOrder.status !== 'COLLECTED' &&  actionOnOrder.status !== 'DELIVERED'" class="h-flex"
+                style="background-color: var(--info);padding: 10px;">
+                <button *ngIf="actionOnOrder.status === 'PAID' ||  actionOnOrder.status === 'REJECTED'"
+                    class="bt-button btn-md"
+                    (click)="openActionConfirmation(actionInteraction,'sm', 'Accept')">Accept</button>
+                <button *ngIf="actionOnOrder.status === 'PAID' ||  actionOnOrder.status === 'ACCEPTED'"
+                    class="bt-button btn-md" (click)="updateStatus('Reject')">Reject</button>
+                <button *ngIf="actionOnOrder.status === 'ACCEPTED'" class="bt-button btn-md"
+                    (click)="updateStatus('Deliver')">Delivered</button>
+                <button *ngIf="actionOnOrder.status === 'ACCEPTED'" class="bt-button btn-md"
+                    (click)="updateStatus('Collect')">Collected</button>
+                <button *ngIf="actionOnOrder.status === 'REJECTED'" class="bt-button btn-md"
+                    (click)="updateStatus('Refund')">Refund</button>
             </div>
+        </div>
+    </div>
+</ng-template> -->
+
+<ng-template #orderList>
+    <div class="y-flex lg">
+        <!-- Header -->
+        <div class="between li-order section-header" style="font-weight: bolder;background: none;">
+            <div style="width: 10%;">Date</div>
+            <div style="width: 10%;">Order Reference</div>
+            <div style="width: 15%;">Customer</div>
+            <div style="width: 10%;">Status</div>
+            <div style="width: 8%;">Total</div>
+            <div style="width: 20%;">Actions</div>
+        </div>
+        <div *ngFor="let order of ordersToView" class="between li-order">
+            <div class="clickable" style="width: 10%;" (click)="openOrder(order)">{{order.dateCreated | date: 'dd-MMM-yyyy' }}</div>
+            <div class="clickable" style="width: 10%;" (click)="openOrder(order)">#{{order.reference}} </div>
+            <div class="clickable" style="width: 15%;" (click)="openOrder(order)">{{order.customer.name}}</div>
+            <div style="width: 10%;" [class.text-success]="order.status === 'PAID'"
+            [class.text-danger]="order.status === 'REJECTED'"
+            [class.text-primary]="order.status === 'CREATED'"
+            [class.text-success]="order.status === 'ACCEPTED'"
+            >{{order.status | titlecase}}</div>
+            <div style="width: 8%;">{{order.total | currency: 'GBP'}}</div>
+            <div class="d-flex"  style="width: 20%;">
+                <button class="btn btn-sm btn-success" *ngIf="order.status === 'PAID'" (click)="updateStatus(order, 'Accept')">Accept</button>
+                <button class="btn btn-sm btn-danger" *ngIf="order.status === 'PAID'" (click)="updateStatus(order, 'Reject')">Reject</button>
+                <button class="btn btn-sm btn-warning" *ngIf="order.status === 'REJECTED'" (click)="updateStatus(order, 'Refund')">Refund</button>
+                <button class="btn btn-sm btn-primary" *ngIf="order.status === 'ACCEPTED'" (click)="updateStatus(order, 'Complete')">Complete</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="y-flex sm">
+        <div *ngFor="let order of ordersToView" class="between li-order">
+            <div class="y-flex sm" style="margin-right: 10px;width: 10%;">
+                <span> {{order.dateCreated | date: 'yyyy'}}</span>
+                <span style="font-size: 20px;font-style: italic;font-weight: 900;"> {{order.dateCreated | date:
+                    'dd'}}</span>
+                <span> {{order.dateCreated | date: 'MMM' | uppercase}}</span>
+            </div>
+            <div class="y-flex sm"  style="flex-grow: 1;width: 40%;" (click)="openOrder(order)">
+                <span>#{{order.reference}}</span>
+                <span>{{order.customer.name}}</span>
+            </div>
+            <span style="margin-right: 10px;width: 10%;"> {{order.total | currency: 'GBP'}}</span>
+            <span style="width: 30%;text-align: center;">{{order.status | titlecase}}</span>
+            <div class="d-flex" style="width: 20%;">
+                <button class="btn btn-sm btn-success" *ngIf="order.status === 'PAID'" (click)="updateStatus(order, 'Accept')">Accept</button>
+                <button class="btn btn-sm btn-danger" *ngIf="order.status === 'PAID'" (click)="updateStatus(order, 'Reject')">Reject</button>
+                <button class="btn btn-sm btn-warning" *ngIf="order.status === 'REJECTED'" (click)="updateStatus(order, 'Refund')">Refund</button>
+                <button class="btn btn-sm btn-primary" *ngIf="order.status === 'ACCEPTED'" (click)="updateStatus(order, 'Complete')">Complete</button>
+            </div>
+            <!-- <div class="name" style="width: 20%;"> <select (change)="onAction(order, $event)"
+                style="border:1px solid #ececec;padding: 6px;border-radius: 6px;" tabindex="1">
+                <option value="Accept" disabled selected>--Action--</option>
+                <option value="Accept" *ngIf="order.status === 'PAID'">Accept</option>
+                <option value="Reject" *ngIf="order.status === 'PAID'">Reject</option>
+                <option value="Complete" *ngIf="order.status === 'ACCEPTED'">Complete</option>
+                <option value="Refund" *ngIf="order.status === 'REJECTED'">Refund</option>
+            </select></div> -->
         </div>
     </div>
 </ng-template>
 
-<ng-template #actionInteraction let-modal>
+<ng-template #emptyOrders>
+    <div style="padding: 20px;background-color: rgb(181, 241, 221);">
+        Oops!. You have no orders in this period!
+    </div>
+</ng-template>
+
+<!-- <ng-template #actionInteraction let-modal>
     <div style="padding: 20px;">
         <div class="y-flex">
             <p>
@@ -162,7 +265,7 @@
             <button class="bt-button btn-md" (click)="updateStatus(action)">{{action | titlecase}}</button>
         </div>
     </div>
-</ng-template>
+</ng-template> -->
 
 <ng-template #templateItem let-item="value">
     <div class="order-item-wrapper">
@@ -182,7 +285,8 @@
                 </div>
             </div>
             <div *ngIf="item.extras !== null && item.extras !== undefined && item.extras.length > 0">
-                <div style="width: 100%;clear: both; display: flex; justify-content: space-between;" *ngFor="let extra of item.extras">
+                <div style="width: 100%;clear: both; display: flex; justify-content: space-between;"
+                    *ngFor="let extra of item.extras">
                     <span>{{extra.name}}</span>
                     <span>{{extra.price | currency: 'GBP'}}</span>
                 </div>

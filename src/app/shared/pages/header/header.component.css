@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Kenia&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Vast+Shadow&display=swap');
 
 .header-container {
     margin: 0;
@@ -22,9 +22,11 @@ header .wrapper {
 }
 
 header .logo {
-    font-family: 'Kenia', sans-serif;
-    font-size: 35px;
+    font-size: 25px;
     display: block;
+    font-family: 'Vast Shadow', serif;
+    /* transform: rotate(-3deg); */
+    text-decoration: underline;
 }
 
 .navbar {
@@ -34,11 +36,12 @@ header .logo {
     margin: 0;
     width: 100%;
     height: 100%;
-    background-color: rgb(241, 122, 122);
     padding: 20px;
-    transition: left 0.3s;
+    transition: left 0.6s;
     display: flex;
-    /* flex-direction: column; */
+    z-index: 9999;
+    justify-content: space-between;
+    background-color: #fff;
 }
 
 .navbar.show {
@@ -54,14 +57,13 @@ header .logo {
     list-style-type: none;
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 25px;
+    align-items: start;
 }
 
 .navbar ul a {
     all: unset;
     color: #444444;
-    text-transform: uppercase;
     cursor: pointer;
     font-weight: bold;
     font-size: medium;
@@ -73,14 +75,9 @@ header .logo {
     text-decoration-thickness: 3px;
 }
 
-.close-nav {
-    /* text-align: right; */
-    /* margin-bottom: 20px; */
-}
-
 .close-nav button {
     all: unset;
-    background: #b93737;
+    background: #222;
     font-size: 20px;
     cursor: pointer;
     border-radius: 3px;
@@ -90,6 +87,8 @@ header .logo {
     height: 50px;
     width: 50px;
     line-height: 50px;
+    border-radius: 50%;
+    font-size: 20px;
 }
 
 .close-nav button:hover {
@@ -98,25 +97,27 @@ header .logo {
 }
 
 .menu-bar button {
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    background: #f7f7f7;
-    height: 50px;
-    width: 50px;
-    padding: 5px 10px;
+    /* border: 1px solid rgba(0, 0, 0, 0.1); */
+    /* background: #f7f7f7; */
+    height: 30px;
+    width: 35px;
+    padding: 5px;
     cursor: pointer;
-    border-radius: 3px;
+    border: none;
+    background: none;
+    /* border-radius: 3px; */
 }
 
 .menu-bar i {
     display: block;
-    border-top: 3px solid #444444;
-    border-bottom: 3px solid #444444;
+    border-top: 2px solid #444444;
+    border-bottom: 2px solid #444444;
 }
 
 .menu-bar i::after {
     display: block;
     content: "";
-    border-top: 3px solid #444444;
+    border-top: 2px solid #444444;
     margin: 6px 0;
 }
 
@@ -134,14 +135,29 @@ header .logo {
     padding: 30px;
 }
 
-.navLink{
+.navLink {
     margin: 0 5px;
     padding: 10px;
 }
-.navLink:hover{
+
+.navLink:hover {
     cursor: pointer;
-    background-color: #111111;
-    color: white;
+    background-color: var(--focus-color);
+}
+
+.navLink-selected {
+    background-color: var(--focus-color);
+}
+
+.userIcon {
+    border-radius: 50%;
+    padding: 5px;
+    background-color: var(--focus-color);
+    height: 30px;
+    width: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 @media (min-width: 550px) {

@@ -1,4 +1,4 @@
-export interface RegisterRequest{
+export interface RegisterRequest {
     firstName: string;
     lastName: string;
     email: string;
@@ -7,39 +7,45 @@ export interface RegisterRequest{
     password: string;
 }
 
-export interface LoginRequest{
+export interface LoginRequest {
     email: string;
     password: string;
     userType: string;
 }
 
-export interface LogoutRequest{
+export interface LogoutRequest {
     userId: string;
-    sessionId: string;
 }
 
-export interface LoginResponse{
-    email: string;
-    userId: string;
-    firstName: string;
-    lastName: string;
-    sessionId: string;
+export interface Errors {
+    errors: { [key: string]: string };
+}
+
+export interface LoginResponse {
+    idToken: string;
+    accessToken: string;
     message: string;
     success: Boolean;
 }
 
-export interface PasswordResetInitiate{
+export class User{
+    id: string;
+    name: string;
+    email: string;
+}
+
+export interface PasswordResetInitiate {
     email: string;
     action: string;
 }
 
-export interface PasswordResetSubmit{
+export interface PasswordResetSubmit {
     email: string;
     otp: string;
     password: string;
 }
 
-export interface ApiResponse{
+export interface ApiResponse {
     endpoint: string;
     message: string;
 }
@@ -49,17 +55,17 @@ export interface PeriodicElement {
     position: number;
     weight: number;
     symbol: string;
-  }
+}
 
-export class OrderSummary{
+export class OrderSummary {
     totalOrdersWeekly: number;
     totalOrdersMonthly: number;
     totalOrdersYearly: number;
-    
+
     totalRevenueWeekly: number;
     totalRevenueMonthly: number;
     totalRevenueYearly: number;
-   
+
     ordersWeekly: Order[];
     ordersMonthly: Order[];
     ordersYearly: Order[];
@@ -95,7 +101,7 @@ export class Order {
     review: Review;
 }
 
-export class OrderTracking{
+export class OrderTracking {
     _id: string;
     orderId: string;
     reference: string;
@@ -108,7 +114,7 @@ export class OrderTracking{
     dateRefunded: Date;
 }
 
-export class Review{
+export class Review {
     _id: string;
     customer: Customer;
     title: string;
@@ -116,7 +122,7 @@ export class Review{
     rating: number;
 }
 
-export class Supplier{
+export class Supplier {
     _id: string;
     name: string;
     email: string;
@@ -124,7 +130,7 @@ export class Supplier{
     address: Address;
 }
 
-export class Customer{
+export class Customer {
     _id: string;
     name: string;
     email: string;
@@ -132,7 +138,7 @@ export class Customer{
     address: Address;
 }
 
-export class Address{
+export class Address {
     addressLine1: string;
     addressLine2: string;
     city: string;
@@ -170,6 +176,14 @@ export class Cuisine {
     updatedAt: string;
 }
 
+export interface Slot{
+    _id: string;
+    name: string;
+    slug: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
 export class ServiceArea {
     _id: string;
     name: string;
@@ -183,14 +197,15 @@ export class Chef {
     coverPhoto: string;
     name: string;
     email: string;
-    displayName: string;
+    kitchenName: string;
     days: string[];
     description: string[];
     cuisines: Cuisine[];
-    slots: string[];
+    slots: Slot[];
     serviceAreas: ServiceArea[];
     collections: Collection[];
     specials: string[];
+    keywords: string[];
     gallery: string[];
     address: Address;
     contact: Contact;
@@ -206,13 +221,13 @@ export class Chef {
     minimumPartyOrder: number;
 }
 
-export class Contact{
+export class Contact {
     person: string;
     mobile: string;
     email: string;
 }
 
-export class Collection{
+export class Collection {
     _id: string;
     name: string;
     chefId: string;
@@ -240,11 +255,35 @@ export class Menu {
     updatedAt: Date;
 }
 
-export class Discount{
+export class Discount {
     _id: string;
     foodId: string;
     percentage: number;
     amount: number;
     dateFrom: Date;
     dateTo: Date;
+}
+
+export class OrderProfileResponse {
+    today: Order[];
+    sevenDays: Order[];
+    month: Order[];
+    lastMonth: Order[];
+    sixMonth: Order[];
+    year: Order[];
+    todayRevenue: number;
+    sevenDaysRevenue: number;
+    monthRevenue: number;
+    lastMonthRevenue: number;
+    sixMonthsRevenue: number;
+    yearRevenue: number;
+    dateRange: Order[];
+    dateFrom: Date;
+    dateTo: Date;
+}
+
+export interface Day {
+    date: number;
+    day: string;
+    month: string;
 }

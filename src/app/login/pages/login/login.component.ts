@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormControl,
   Validators,
@@ -10,15 +10,18 @@ import { FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Utils } from 'src/app/helpers/utils';
 import { AccountService } from 'src/app/services/account.service';
-import { Chef, LoginResponse } from 'src/app/model/all-models';
+import { Chef, Errors } from 'src/app/model/all-models';
 import { ProfileService } from 'src/app/services/profile.service';
+import { ContextService } from 'src/app/services/context.service';
+import { Subject, takeUntil, tap } from 'rxjs';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
+
   submitted: boolean = false;
   loading: boolean = false;
   successful: boolean = false;
@@ -26,6 +29,9 @@ export class LoginComponent implements OnInit {
   error: string;
   email: string;
   returnUrl: string;
+  destroy$ = new Subject<void>();
+  errors: Errors = { errors: {} };
+  errorMessage: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -33,8 +39,9 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private utils: Utils,
     private accountService: AccountService,
-    private profileSvc: ProfileService
-  ) {}
+    
+    private ctxSvc: ContextService
+  ) { }
 
   ngOnInit(): void {
     this.loading = false;
@@ -42,6 +49,7 @@ export class LoginComponent implements OnInit {
     this.successful = false;
     // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'];
+   
   }
 
   submit() {
@@ -57,46 +65,31 @@ export class LoginComponent implements OnInit {
     this.submitted = true;
     // reset alerts on submit
     this.loading = true;
-    this.accountService.login(this.email, this.password).subscribe(
-      (res) => {
-        var response: LoginResponse = res;
-        console.log(response);
-        if (response.success === true) {
-          sessionStorage.setItem('loginSession', JSON.stringify(response));
-          this.router.navigate(['home']);
-          this.profileSvc.getProfile(this.email).subscribe(
-            (res) =>{
-              var chef:Chef = res;
-              localStorage.setItem("chef", JSON.stringify(chef));
-            },
-            (err) =>{
-              window.alert('Err: Login')
-            },
-          );
-
-        } else {
-          this.error = response.message;
-        }
+    console.log('Submitting login..')
+    let observable = this.accountService.login(this.email, this.password);
+    observable.pipe(takeUntil(this.destroy$)).subscribe({
+      next: () => {
+        this.errorMessage = undefined;
+        console.log('Login success. Redirecting to home...')
+        void this.router.navigate(["/"])
       },
-      (err) => {
-        console.error('Error during login: ' + JSON.stringify(err));
-        this.error =
-          'Your login attempt is unsuccessful. Please try again later';
-      }
-    );
+      error: (err) => {
+        console.error('Erros from reset submit.'+ JSON.stringify(err))
+        this.errors = err;
+        this.loading = false;
+        this.errorMessage = err.error.detail;
+      },
+    });
 
-    // this.accountService.login(this.email, this.password)
-    //   .pipe(first())
-    //   .subscribe(
-    //     data => {
-    //       console.log("Login response : "+ JSON.stringify(data))
-    //       this.router.navigate([this.returnUrl]);
-    //     },
-    //     error => {
-    //       this.alertService.error(error);
-    //       this.loading = false;
-    //       this.successful = false;
-    //     });
+  }
+
+  forgotPassword() {
+   
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   joinUs() {

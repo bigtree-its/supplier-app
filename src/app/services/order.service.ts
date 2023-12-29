@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Order, OrderSummary, OrderTracking } from '../model/all-models';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { Order, OrderProfileResponse, OrderSummary, OrderTracking } from '../model/all-models';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { formatDate } from "@angular/common";
 
@@ -8,6 +8,10 @@ import { formatDate } from "@angular/common";
   providedIn: 'root',
 })
 export class OrderService {
+
+  url:string = 'http://localhost:8080/api/profiles';
+  storageItem: string = "orders";
+  public orderSubject$: BehaviorSubject<OrderProfileResponse> = new BehaviorSubject<OrderProfileResponse>(null);
 
   constructor(private http: HttpClient) {}
 
@@ -31,6 +35,30 @@ export class OrderService {
 
     var url = 'http://localhost:8080/api/customer-orders/search';
     return this.http.get<Order[]>(url, {params});
+  }
+
+  getProfile(email: string, id: string): Observable<OrderProfileResponse> {
+
+    var profileReq ={
+      profileType: "Supplier",
+      profileEmail: email,
+      profileId: id,
+    }
+    console.log('getting profile for '+ JSON.stringify(profileReq))
+    return this.http.post<OrderProfileResponse>(this.url, profileReq).pipe(
+      tap(result => {
+        localStorage.setItem(this.storageItem, JSON.stringify(result));
+        this.orderSubject$.next(result);
+      })
+    );
+  }
+
+  getLocalOrders(): OrderProfileResponse {
+    var s = localStorage.getItem(this.storageItem);
+    if (s !== null && s !== undefined) {
+     return JSON.parse(s);
+    }
+    return null;
   }
 
   updateStatus(tracking: OrderTracking): Observable<OrderTracking>{

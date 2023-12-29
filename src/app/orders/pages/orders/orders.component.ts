@@ -1,12 +1,16 @@
 import { Location } from '@angular/common';
-import { Component, TRANSLATIONS, ViewChild } from '@angular/core';
+import { Component,  } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   LoginResponse,
   Order,
+  OrderProfileResponse,
   OrderTracking,
   PeriodicElement,
+  User,
 } from 'src/app/model/all-models';
+import { AccountService } from 'src/app/services/account.service';
 import { OrderService } from 'src/app/services/order.service';
 
 @Component({
@@ -17,7 +21,7 @@ import { OrderService } from 'src/app/services/order.service';
 export class OrdersComponent {
   actionOnOrder: Order;
 
-  selectedPeriod: string = 'This Month';
+  selectedPeriod: string = 'Today';
 
   periods: string[] = ['Today', 'Week', 'Month'];
 
@@ -40,27 +44,45 @@ export class OrdersComponent {
   todayOrders: Order[] = [];
   loginSessionJson: string;
   action: any;
+  profile: OrderProfileResponse;
+  ordersToView: Order[];
 
   constructor(
     private _location: Location,
-    private orderSvc: OrderService, private modalSvc: NgbModal) {}
+    private router: Router,
+    private orderSvc: OrderService, 
+    private accountSvc: AccountService,
+    private modalSvc: NgbModal) {}
 
   ngOnInit() {
-    this.loginSessionJson = sessionStorage.getItem('loginSession');
-    if (this.loginSessionJson !== null && this.loginSessionJson !== undefined) {
-      var session: LoginResponse = JSON.parse(this.loginSessionJson);
-      this.orderSvc.getOrders(session.email, '').subscribe(
-        (data: Order[]) => {
-          this.orders = data;
-          this.dataSource = data;
-          this.monthlyOrders = data;
-          this.groupOrders();
-        },
-        (err) => {
-          window.alert('Error when fetching the orders');
+    this.orderSvc.orderSubject$.subscribe(e=>{
+      this.profile = e;
+      if ( e !== null && e !== undefined){
+        this.ordersToView = this.profile.today;
+      }else{
+        console.log('Subscribed orders are empty');
+        var user: User = this.accountSvc.getCurrentUser();
+        console.log('user logged in.. fetching orders..')
+        if ( user !== null && user !== undefined){
+          this.orderSvc.getProfile(user.email, user.id).subscribe(e=>{
+            this.profile = e;
+            if ( e !== null && e !== undefined){
+              this.ordersToView = this.profile.today;
+            }
+          });
         }
-      );
-    }
+      }
+      
+    });
+    // var chefOrderProfile = sessionStorage.getItem("chef-order-profile");
+    // if ( chefOrderProfile !== null && chefOrderProfile !== undefined){
+    //   this.profile = JSON.parse(chefOrderProfile);
+    // }
+  }
+
+  openOrder(order: Order){
+    sessionStorage.setItem("chef-single-order", JSON.stringify(order));
+    this.router.navigate(['orders', order.reference]).then();
   }
 
   groupOrders() {
@@ -91,6 +113,7 @@ export class OrdersComponent {
   }
 
   selectPeriodEvent(event) {}
+
   selectPeriod(period: string) {
     if (period === 'Today') {
       this.dataSource = this.todayOrders;
@@ -102,23 +125,14 @@ export class OrdersComponent {
       this.dataSource = this.monthlyOrders;
     }
     if (period === 'Last Month') {
-      if (
-        this.loginSessionJson !== null &&
-        this.loginSessionJson !== undefined
-      ) {
-        var session: LoginResponse = JSON.parse(this.loginSessionJson);
-        this.orderSvc.getOrders(session.email, 'LastMonth').subscribe(
-          (data: Order[]) => {
-            this.orders = data;
-            this.dataSource = data;
-          },
-          (err) => {
-            window.alert('Error when fetching the orders');
-          }
-        );
-      }
+      // TODO
     }
     this.selectedPeriod = period;
+  }
+
+  displayOrders(orders:Order[], period){
+    this.ordersToView = orders;
+    this.selectedPeriod= period;
   }
 
   selectStatus(event) {
@@ -159,7 +173,7 @@ export class OrdersComponent {
       this._location.back();
   }
 
-  updateStatus(action: string) {
+  updateStatus(order: Order, action: string) {
     var status;
     switch (action) {
       case 'Accept': {
@@ -171,24 +185,20 @@ export class OrdersComponent {
         break;
       }
       case 'Refund': {
-        status = 'REJECTED';
+        status = 'REFUNDED';
         break;
       }
-      case 'Collected': {
-        status = 'COLLECTED';
-        break;
-      }
-      case 'Delivered': {
-        status = 'DELIVERED';
+      case 'Complete': {
+        status = order.serviceMode === 'COLLECTION' ? 'COLLECTED': 'DELIVERED';
         break;
       }
     }
-    this.actionOnOrder.status = status;
+    order.status = status;
     var tracking: OrderTracking = {
-      reference: this.actionOnOrder.reference,
+      reference: order.reference,
       status: status,
       _id: '',
-      orderId: '',
+      orderId: order._id,
       dateAccepted: undefined,
       datePaid: undefined,
       dateCancelled: undefined,
@@ -198,12 +208,18 @@ export class OrdersComponent {
     };
     this.orderSvc.updateStatus(tracking).subscribe(
       (data: OrderTracking) => {
-        this.actionOnOrder.status = data.status;
+        order.status = data.status;
       },
       (err) => {
         window.alert('Error when ' + status + ' the order');
       }
     );
+    
+  }
+
+  onAction(order: Order, e){
+    this.updateStatus(order, e.target.value);
     this.modalSvc.dismissAll();
   }
+  
 }

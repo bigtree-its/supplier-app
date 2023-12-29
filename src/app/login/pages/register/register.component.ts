@@ -22,6 +22,7 @@ export class RegisterComponent {
   faKey = faKey;
   register: RegisterRequest;
   registerForm: FormGroup;
+  errorMessage: any;
 
   constructor(private accountService: AccountService,
     private router: Router,
@@ -57,19 +58,23 @@ export class RegisterComponent {
         mobile: this.registerForm.get('mobile').value,
         userType: 'SUPPLIER',
       };
-      window.alert('Registering '+ JSON.stringify(this.register))
+      console.log('Registering '+ JSON.stringify(this.register))
 
       this.accountService.register(this.register).subscribe(
         (data) => {
           console.warn(JSON.stringify(data, null, 2));
           this.router.navigate(['login']);
         },
-        (error) => {
-          console.error(error.errorMessage);
+        (err) => {
+          this.errorMessage = err.error.detail;
         }
       );
     } else {
-      window.alert('Form is not valid');
+      console.log('Form is not valid');
     }
+  }
+
+  signIn() {
+    this.router.navigate(['/login']);
   }
 }

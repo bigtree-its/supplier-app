@@ -17,7 +17,7 @@ export class MenuService {
   getMenus(chefEmail: string): Observable<Menu[]> {
     var params = new HttpParams();
     if (chefEmail !== undefined && chefEmail !== null) {
-      params = params.set('email', chefEmail);
+      params = params.set('chef', chefEmail);
     }
     return this.http.get<Menu[]>(this.menuSvcUrl, { params });
   }

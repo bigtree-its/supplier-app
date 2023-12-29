@@ -1,25 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
 
-
-@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,600;6..96,700;6..96,800;6..96,900&display=swap');
-
 *,
 *::before,
 *::after {
     box-sizing: border-box;
     line-height: 1.5em;
+    -moz-appearance:initial;
 }
 
 html {
     font-size: 16px;
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    box-sizing: border-box;
+    height: 100%;
 }
 
 body {
     margin: 0;
-    font-family: "Open Sans", sans-serif;
-    background-color: #f7f7f7;
+    /* font-family: "Open Sans", sans-serif;
+    background-color: #f8f7f4; */
+    /* display: flex; align-items: center; justify-content: center; min-height: 100vh;  */
+    background: #f5f5f5;
 }
 
 :root {
@@ -50,8 +52,9 @@ body {
     font-size: 0.9rem;
     letter-spacing: .1px;
     font-weight: 300;
-    overflow-y: scroll;
+    
     box-sizing: content-box;
+    --focus-color: rgb(200, 255, 144);
 }
 
 html,
@@ -61,9 +64,67 @@ body {
 
 body {
     margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-family: 'Dosis', sans-serif;
 }
 
+.anchor, .leaf {
+    padding-right: 1px;
+    font-weight: bold;
+}
+
+.leaf {
+    font-weight: normal;
+}
+
+.anchor:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.chk-switch {
+    display: inline-block;
+    height: 34px;
+    /* width: 80px; */
+}
+
+.chk-switch > input {
+    display: none;
+}
+
+.chk-switch-slider {
+    background-color: #ccc;
+    cursor: pointer;
+    transition: .4s;
+    height: 26px;
+    width: 40px;
+}
+
+.chk-switch-slider:before {
+    background-color: #fff;
+    content: "";
+    height: 26px;
+    position: absolute;
+    transition: .35s;
+    width: 26px;
+}
+
+
+.chk-switch>input:checked+.chk-switch-slider {
+    background-color: #66bb6a;
+} 
+
+.chk-switch>input:checked+.chk-switch-slider:before {
+    transform: translateX(20px);
+    /* -moz-transform: translateX(23px); */
+}
+
+.chk-switch-slider.round {
+    border-radius: 34px;
+}
+
+.chk-switch-slider.round:before {
+    border-radius: 50%;
+}
 .card {
     display: flex;
     flex-direction: column;
@@ -83,9 +144,62 @@ body {
     top: 50%;
     transform: translate(-50%, -50%);
 }
+.clickable{
+    font-weight: 500;
+    text-decoration: underline;
+}
+.clickable:hover{
+    cursor: pointer;
+    color: #5d8ed5;
+}
+.clickableDiv{
+    border: 1px solid #e2e2e2;
+    padding: 10px;
+    text-align: center;
+    border-radius: 6px;
+    background-color: var(--focus-color);
+}
+
+.clickableDiv:hover{
+   cursor: pointer;
+   background-color: #27ae60;
+   color: #fff;
+}
+
+.unClickableDiv{
+    border: 1px solid #e2e2e2;
+    padding: 10px;
+    text-align: center;
+    border-radius: 6px;
+    background-color: var(--focus-color);
+}
+
+.unClickableDiv:hover{
+   background-color: #e2e2e2;
+}
 
 .gap {
     gap: 1.0;
+}
+.section-header{
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    font-weight: 900;
+    border-bottom: 1px solid #e3e3e3;
+}
+
+.big-black-btn{
+    padding: 15px;
+    display: block;
+    background-color: black;
+    border:none;
+    border-radius: 32px;
+    color: #fff;
+    font-weight: 600;
+    width: 400px;
+}
+.big-black-btn:hover{
+    opacity: 0.8;
 }
 
 .subHeader {
@@ -94,17 +208,22 @@ body {
 }
 
 .info-button {
-    border: 1px solid #cdcdcd;
-    padding: 10px;
-    background-color: #e9e5e5;
+    border: 1px solid #e2e2e2;
+    padding: 30px;
+    background-color: #fff;
     margin-right: 10px;
     align-items: center;
     justify-content: center;
-    width: 300px;
 }
 
 .info-button:hover {
-    border: 1px solid #6e20ff;
+    cursor: pointer;
+    border: 1px solid var(--focus-color);
+    background-color: var(--focus-color);
+}
+.info-button> .value{
+    font-weight: 900;
+    font-size: 20px;
 }
 
 .bt-button {
@@ -124,6 +243,15 @@ body {
 .bt-button:hover {
     cursor: pointer;
     --box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .1);
+}
+
+.d-flex{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+}
+.d-flex >*{
+    flex-grow: 1;
 }
 
 .h-flex,
@@ -220,7 +348,7 @@ body {
     background-color: #ececec;
 }
 
-._381fS {
+._381fS, ._381fS-currency {
     background-color: transparent;
     line-height: normal;
     outline: none;
@@ -238,6 +366,10 @@ body {
     text-overflow: ellipsis;
     font-weight: 500;
     border: none;
+}
+
+._381fS-currency::before{
+    content: "£";
 }
 
 ._26LFr {
@@ -313,4 +445,25 @@ body {
 
 .mr-1 {
     margin-right: 10px;
+}
+
+.md{
+    display: none;
+}
+.lg{
+    display: none;
+}
+.sm{
+    display: flex;
+}
+
+/** Big Screen **/
+@media (min-width: 550px) {
+    .sm{
+        display: none;
+    }
+    .lg,
+    .md {
+        display: flex;
+    }
 }

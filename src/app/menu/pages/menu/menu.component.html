@@ -1,6 +1,10 @@
 <div class="container">
     <div class="y-flex">
-        <div class="page-header" (click)="selectActiveLayout('Home', '')"><img src="/assets/icons/menu.png" height="30px" width="30px"></div>
+        <div class="h-flex" style="border-bottom: 1px solid #e1e1e1;padding: 10px;margin-bottom: 20px;">
+            <span class="anchor" (click)="selectActiveLayout('Home', 'home')">Products</span>
+            <span *ngIf="leafView !== undefined" style="padding-right: 5px;">/</span>
+            <span *ngIf="leafView !== undefined" class="leaf">{{leafView}}</span>
+        </div>
         <ng-container [ngSwitch]="activeLayout">
             <ng-container *ngSwitchCase="'Home'" [ngTemplateOutlet]="homeLayout"></ng-container>
             <ng-container *ngSwitchCase="'Menus'" [ngTemplateOutlet]="menuLayout"></ng-container>
@@ -8,24 +12,25 @@
             <ng-container *ngSwitchCase="'Specials'" [ngTemplateOutlet]="specialsLayout"></ng-container>
         </ng-container>
     </div>
-   
+
 </div>
 
 <ng-template #homeLayout>
-    <div class="y-flex" style="gap: 20px;align-items: center;justify-content: center;">
-        <button class="info-button h-flex" (click)="selectActiveLayout('Menus', 'listMenu')">
-            <strong>{{menus === null || menus === undefined ? 0: menus.length}}</strong>
+    <div class="d-flex" style="gap: 20px;align-items: center;justify-content: center;">
+        <button class="info-button y-flex" (click)="selectActiveLayout('Menus', 'listMenu')">
             <span>Menus</span>
+            <strong style="font-size: 30px;">{{menus === null || menus === undefined ? 0: menus.length}}</strong>
         </button>
-        <button class="info-button h-flex" (click)="selectActiveLayout('Collections', 'listCollection')">
-            <strong>{{collections === null || collections === undefined ? 0:
-                collections.length}}</strong>
+        <button class="info-button y-flex" (click)="selectActiveLayout('Collections', 'listCollection')">
             <span>Collections</span>
-        </button>
-        <button class="info-button h-flex" (click)="selectActiveLayout('Specials', 'listSpecials')">
-            <strong>{{collections === null || collections === undefined ? 0:
+            <strong style="font-size: 30px;">{{collections === null || collections === undefined ? 0:
                 collections.length}}</strong>
+        </button>
+        <button class="info-button y-flex" (click)="selectActiveLayout('Specials', 'listSpecials')">
             <span>Specials</span>
+            <strong style="font-size: 30px;">{{collections === null || collections === undefined ? 0:
+                collections.length}}</strong>
+
         </button>
     </div>
 </ng-template>
@@ -59,9 +64,9 @@
         <div class="between header">
             <strong (click)="selectSubLayout('listCollections')">New Collection</strong>
             <div class="h-flex">
-                <button tabindex="8" type="button" class="btn btn-sm btn-outline-success mr-1"
+                <button tabindex="8" type="button" class="btn btn-sm btn-success mr-1"
                     (click)="saveNewCollection()">Submit</button>
-                <button tabindex="9" type="button" class="btn btn-sm btn-outline-secondary mr-1"
+                <button tabindex="9" type="button" class="btn btn-sm btn-warning mr-1"
                     (click)="selectSubLayout('listCollection')">Cancel</button>
             </div>
         </div>
@@ -80,8 +85,8 @@
             <strong (click)="selectSubLayout('listCollections')">Collections</strong>
             <button class="btn btn-sm btn-outline-primary" (click)="addCollection()">Add</button>
         </div>
-        <div class="h-flex">
-            <div class="between" style="border: 1px solid #ececec; border-radius: 6px;padding: 10px;"
+        <div class="d-flex">
+            <div class="between" style="border: 1px solid #ececec; border-radius: 6px;padding: 10px;flex-grow: 1;"
                 *ngFor="let collection of collections">
                 <span style="margin-right: 20px;">{{collection.name}}</span>
                 <button class="btn btn-sm btn-outline-danger" toolTip="Remove"
@@ -102,18 +107,18 @@
         <div *ngFor="let special of specials" class="h-flex"
             style="background-color: #f1f1f1;padding: 6px;border-radius: 3px;margin-bottom: 5px;">
             <div class="image-div">
-                <img src={{special.image}} height="100%" width="40px">
+                <img src="{{ special.image ? special.image : '/assets/icons/cooking.png'}}" height="100%" width="40px">
             </div>
             <div class="y-flex flex-grow">
                 <span>{{special.name}}</span>
                 <span>{{special.description}}</span>
             </div>
-            <div class="y-flex">
+            <div class="menu-item-right">
                 <span>{{special.price | currency:'GBP'}}</span>
                 <button style="margin: 0 5px;" class="btn btn-sm btn-outline-primary" (click)="onEditMenu(special)"
                     placement="top" ngbTooltip="Make changes">Modify</button>
                 <button style="margin: 0 5px;" class="btn btn-sm btn-outline-danger" (click)="onRemoveFood(special)"
-                    placement="top" ngbTooltip="Remove Special from inventory">Delete</button>
+                    placement="top" ngbTooltip="Remove menu from inventory">Delete</button>
             </div>
         </div>
     </div>
@@ -126,9 +131,9 @@
         <div class="between header">
             <strong>New Menu</strong>
             <div class="h-flex">
-                <button tabindex="8" type="button" class="btn btn-sm btn-outline-success mr-1"
+                <button tabindex="8" type="button" class="btn btn-sm btn-success mr-1"
                     (click)="saveMenu()">Submit</button>
-                <button tabindex="9" type="button" class="btn btn-sm btn-outline-secondary mr-1"
+                <button tabindex="9" type="button" class="btn btn-sm btn-warning mr-1"
                     (click)="selectSubLayout('listMenu')">Cancel</button>
             </div>
         </div>
@@ -138,105 +143,121 @@
                 <button class="btn btn-sm btn-outline-danger" (click)="cancelError()">x</button>
             </div>
         </div>
-        <div class="h-flex" style="padding: 10px; border: 1px solid #ddd;border-radius: 3px;">
-            <label for="collections">Choose a collection:</label>
-            <form [formGroup]="form">
-                <select formControlName="collection" (change)="onChangeCollection($event)"
-                    style="border:1px solid #ececec;background-color: #f1f1f1;padding: 6px;border-radius: 6px;">
-                    <option *ngFor="let collection of collections" [ngValue]="collection">
-                        {{ collection.name }}
-                    </option>
-                </select>
-            </form>
-            <button class="btn btn-sm btn-outline-primary" (click)="openModal(collectionContent)">Add</button>
-        </div>
-        <div class="input-div">
-            <input required class="_381fS form-control" type="text" name="itemName" id="menuName" tabindex="1"
-                autocomplete="off" value="" [(ngModel)]="newMenu.name" #ctrl="ngModel"
-                placeholder="Give a name to your menu">
-            <div class="_2EeI1 _26LFr"></div>
-            <label class="_1Cvlf _2tL9P " for="itemName">Name</label>
-        </div>
-        <div class="input-div">
-            <input class="_381fS" type="text" name="itemDesc" id="itemDesc" tabindex="2" autocomplete="off" value=""
-                [(ngModel)]="newMenu.description" #ctrl="ngModel" placeholder="Item description goes here">
-            <div class="_2EeI1 _26LFr"></div>
-            <label class="_1Cvlf _2tL9P " for="itemDesc">Description</label>
-        </div>
-        <div class="horizontal"
-            style="margin: 5px 0;padding: 5px 0;border: 1px solid #ececec;padding: 10px;border-radius: 6px;">
-            <span style="padding: 0 10px;">Vegetarian</span>
-            <div>
-                <input tabindex="3" id="check" type="checkbox" [(ngModel)]="newMenu.vegetarian"
-                    (change)="handleVegetarian($event)" checked="{{newMenu.vegetarian}}"
-                    style="height: 20px;width: 20px;">
+        <div class="d-flex">
+            <div class="y-flex" style="padding: 10px; border: 1px solid #e2e2e2;border-radius: 6px;">
+                <div class="input-div">
+                    <input required class="_381fS form-control" type="text" name="itemName" id="menuName" tabindex="1"
+                        autocomplete="off" value="" [(ngModel)]="newMenu.name" #ctrl="ngModel"
+                        placeholder="Give a name to your menu">
+                    <div class="_2EeI1 _26LFr"></div>
+                    <label class="_1Cvlf _2tL9P " for="itemName">Name</label>
+                </div>
+                <div class="h-flex" style="padding: 10px; border: 1px solid #ddd;border-radius: 3px;">
+                    <label for="collections">Choose a collection:</label>
+                    <form [formGroup]="form">
+                        <select formControlName="collection" (change)="onChangeCollection($event)"
+                            style="border:1px solid #ececec;background-color: #f1f1f1;padding: 6px;border-radius: 6px;">
+                            <option *ngFor="let collection of collections" [ngValue]="collection">
+                                {{ collection.name }}
+                            </option>
+                        </select>
+                    </form>
+                    <button class="btn btn-sm btn-outline-primary" (click)="openModal(collectionContent)">Add</button>
+                </div>
+                <div class="input-div">
+                    <input class="_381fS" type="text" name="itemDesc" id="itemDesc" tabindex="2" autocomplete="off"
+                        value="" [(ngModel)]="newMenu.description" #ctrl="ngModel"
+                        placeholder="Item description goes here">
+                    <div class="_2EeI1 _26LFr"></div>
+                    <label class="_1Cvlf _2tL9P " for="itemDesc">Description</label>
+                </div>
+                <div class="between"
+                    style="margin: 5px 0;padding: 5px 0;border: 1px solid #ececec;padding: 10px;border-radius: 6px;">
+                    <span style="padding: 0 10px;">Vegetarian</span>
+                    <div>
+                        <label class="chk-switch" for="vegetarian">
+                            <input (change)="handleVegetarian($event)" type="checkbox" id="vegetarian"
+                                [checked]="newMenu.vegetarian === true " />
+                            <div class="chk-switch-slider round"></div>
+                        </label>
+                    </div>
+                </div>
+                <div class="between"
+                    style="margin: 5px 0;padding: 5px 0;border: 1px solid #ececec;padding: 10px;border-radius: 6px;">
+                    <span style="padding: 0 10px;">Is your Special Menu</span>
+                    <div>
+                        <label class="chk-switch" for="special">
+                            <input (change)="handleSpecial($event)" type="checkbox" id="special"
+                                [checked]="newMenu.special === true " />
+                            <div class="chk-switch-slider round"></div>
+                        </label>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="horizontal"
-            style="margin: 5px 0;padding: 5px 0;border: 1px solid #ececec;padding: 10px;border-radius: 6px;">
-            <span style="padding: 0 10px;">Is your Special Menu</span>
-            <div>
-                <input tabindex="4" id="check" type="checkbox" [(ngModel)]="newMenu.special"
-                    (change)="handleSpecial($event)" checked="{{newMenu.special}}" style="height: 20px;width: 20px;">
-            </div>
-        </div>
-        <!-- (change)="handleVegetarian($event)" -->
-        <div class="horizontal"
-            style="margin: 5px 0;padding: 5px 0;border: 1px solid #ececec;padding: 10px;border-radius: 6px;">
-            <span style="padding: 0 10px;">Spice</span>
-            <div class="horizontal">
-                <div class="btn-group" role="group" aria-label="Spice Level">
-                    <input tabindex="5" type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off"
-                        [checked]="newMenu.spice === 1">
-                    <label class="btn btn-sm btn-outline-success" for="btnradio1">Low</label>
+            <div class="y-flex" style="padding: 10px; border: 1px solid #e2e2e2;border-radius: 6px;">
 
-                    <input tabindex="6" type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off"
-                        [checked]="newMenu.spice === 2">
-                    <label class="btn btn-sm btn-outline-warning" for="btnradio2">Medium</label>
+                <div class="h-flex"
+                    style="margin: 5px 0;padding: 5px 0;border: 1px solid #ececec;padding: 10px;border-radius: 6px;">
+                    <span style="padding: 0 10px;">Spice</span>
+                    <div class="horizontal">
+                        <div class="btn-group" role="group" aria-label="Spice Level">
+                            <input tabindex="5" type="radio" class="btn-check" name="btnradio" id="btnradio1"
+                                autocomplete="off" [checked]="newMenu.spice === 1">
+                            <label class="btn btn-sm btn-outline-success" for="btnradio1">Low</label>
 
-                    <input tabindex="7" type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off"
-                        [checked]="newMenu.spice === 3">
-                    <label class="btn btn-sm btn-outline-danger" for="btnradio3">Hot</label>
+                            <input tabindex="6" type="radio" class="btn-check" name="btnradio" id="btnradio2"
+                                autocomplete="off" [checked]="newMenu.spice === 2">
+                            <label class="btn btn-sm btn-outline-warning" for="btnradio2">Medium</label>
+
+                            <input tabindex="7" type="radio" class="btn-check" name="btnradio" id="btnradio3"
+                                autocomplete="off" [checked]="newMenu.spice === 3">
+                            <label class="btn btn-sm btn-outline-danger" for="btnradio3">Hot</label>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div style="border: 1px solid #ededf4;" class="h-flex">
-            <span style="display: block;padding: 5px 20px;">Price</span>
-            <div class="d-flex flex-start align-items-center" style="padding: 0 20px;">
-                <input value="" [(ngModel)]="newMenu.price" #ctrl="ngModel" placeholder="5.65" name="itemPrice"
-                    id="itemPrice" tabindex="8" autocomplete="off"
-                    style="border: none;padding: 2px;margin-right: 10px;background-color: #f8f8f8;width: 50px;">
-                <span>GBP</span>
-            </div>
-        </div>
-        <div class="y-flex" style="border: 1px solid #ececec;padding: 10px; margin: 10px 0;">
-            <strong>Choices</strong>
-            <div class="h-flex flex-wrap" *ngIf="choices.length > 0">
-                <div class="between" *ngFor="let choice of choices"
-                    style="background-color: #ececec; padding: 10px;margin-right: 10px;">
-                    <span style="margin-right: 30px;">{{choice.name}}</span>
-                    <span>{{choice.price | currency: 'GBP'}}</span>
+                <div style="border: 1px solid #ededf4;" class="h-flex">
+                    <span style="display: block;padding: 5px 20px;">Price</span>
+                    <div class="d-flex flex-start align-items-center" style="padding: 0 20px;">
+                        <input value="" [(ngModel)]="newMenu.price" #ctrl="ngModel" placeholder="5.65" name="itemPrice"
+                            id="itemPrice" tabindex="8" autocomplete="off"
+                            style="border: none;padding: 2px;margin-right: 10px;background-color: #f8f8f8;width: 50px;">
+                        <span>GBP</span>
+                    </div>
                 </div>
-            </div>
-            <div class="h-felx" style="background-color: rgb(211, 252, 239);padding: 10px;margin: 10px 0;">
-                <span style="color: rgb(2, 137, 92);margin-right: 20px;">You have {{choices.length}} choices for this
-                    menu.</span>
-                <button class="btn btn-sm btn-success" (click)="openExtraModal(extraContent, 'Choice')">Add </button>
-            </div>
-        </div>
-        <div class="y-flex" style="border: 1px solid #ececec;padding: 10px; margin: 10px 0;">
-            <strong>Extras</strong>
-            <div class="h-flex flex-wrap" *ngIf="extras.length > 0">
-                <div class="between" *ngFor="let extra of extras"
-                    style="background-color: #ececec; padding: 10px;margin-right: 10px;">
-                    <span style="margin-right: 30px;">{{extra.name}}</span>
-                    <span>{{extra.price | currency: 'GBP'}}</span>
+                <div class="y-flex" style="border: 1px solid #ececec;padding: 10px; margin: 10px 0;">
+                    <strong>Choices</strong>
+                    <div class="h-flex flex-wrap" *ngIf="choices.length > 0">
+                        <div class="between" *ngFor="let choice of choices"
+                            style="background-color: #ececec; padding: 10px;margin-right: 10px;">
+                            <span style="margin-right: 30px;">{{choice.name}}</span>
+                            <span>{{choice.price | currency: 'GBP'}}</span>
+                        </div>
+                    </div>
+                    <div class="h-felx" style="background-color: rgb(211, 252, 239);padding: 10px;margin: 10px 0;">
+                        <span style="color: rgb(2, 137, 92);margin-right: 20px;">You have {{choices.length}} choices for
+                            this
+                            menu.</span>
+                        <button class="btn btn-sm btn-success" (click)="openExtraModal(extraContent, 'Choice')">Add
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div class="h-felx" style="background-color: rgb(211, 252, 239);padding: 10px;margin: 10px 0;">
-                <span style="color: rgb(2, 137, 92);margin-right: 20px;">You have {{extras.length}} extras for this
-                    menu.</span>
-                <button class="btn btn-sm btn-success" (click)="openExtraModal(extraContent, 'Extra')">Add </button>
+                <div class="y-flex" style="border: 1px solid #ececec;padding: 10px; margin: 10px 0;">
+                    <strong>Extras</strong>
+                    <div class="h-flex flex-wrap" *ngIf="extras.length > 0">
+                        <div class="between" *ngFor="let extra of extras"
+                            style="background-color: #ececec; padding: 10px;margin-right: 10px;">
+                            <span style="margin-right: 30px;">{{extra.name}}</span>
+                            <span>{{extra.price | currency: 'GBP'}}</span>
+                        </div>
+                    </div>
+                    <div class="h-felx" style="background-color: rgb(211, 252, 239);padding: 10px;margin: 10px 0;">
+                        <span style="color: rgb(2, 137, 92);margin-right: 20px;">You have {{extras.length}} extras for
+                            this
+                            menu.</span>
+                        <button class="btn btn-sm btn-success" (click)="openExtraModal(extraContent, 'Extra')">Add
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -276,9 +297,9 @@
         <div class="between header">
             <strong>{{menuOnEdit.name}}</strong>
             <div class="h-flex">
-                <button tabindex="8" type="button" class="btn btn-sm btn-outline-success mr-1"
+                <button tabindex="8" type="button" class="btn btn-sm btn-success mr-1"
                     (click)="saveMenu()">Submit</button>
-                <button tabindex="9" type="button" class="btn btn-sm btn-outline-secondary mr-1"
+                <button tabindex="9" type="button" class="btn btn-sm btn-warning mr-1"
                     (click)="selectSubLayout('listMenu')">Cancel</button>
             </div>
         </div>
@@ -288,101 +309,120 @@
                 <button class="btn btn-sm btn-outline-danger" (click)="cancelError()">x</button>
             </div>
         </div>
-        <div class="h-flex"
-            style="margin: 5px 0;padding: 15px 0;border: 1px solid #ececec;padding: 10px;border-radius: 6px;">
-            <span style="padding: 0 10px;">Collections</span>
-            <form [formGroup]="form">
-                <select formControlName="collection" (change)="onChangeCollection($event)"
-                    style="border:1px solid #ececec;background-color: #f1f1f1;padding: 6px;border-radius: 6px;"
-                    tabindex="1">
-                    <option *ngFor="let collection of collections" [ngValue]="collection">
-                        {{ collection.name }}
-                    </option>
-                </select>
-            </form>
-        </div>
-        <div class="input-div">
-            <input class="_381fS" type="text" name="itemName" id="menuName" tabindex="2" autocomplete="off" value=""
-                [(ngModel)]="menuOnEdit.name" #ctrl="ngModel" placeholder="Vegetable Biryani">
-            <div class="_2EeI1 _26LFr"></div>
-            <label class="_1Cvlf _2tL9P " for="itemName">Name</label>
-        </div>
-        <div class="input-div">
-            <input class="_381fS" type="text" name="itemDesc" id="itemDesc" tabindex="3" autocomplete="off" value=""
-                [(ngModel)]="menuOnEdit.description" #ctrl="ngModel" placeholder="Item description goes here">
-            <div class="_2EeI1 _26LFr"></div>
-            <label class="_1Cvlf _2tL9P " for="itemDesc">Description</label>
-        </div>
-        <div class="horizontal"
-            style="margin: 5px 0;padding: 5px 0;border: 1px solid #ececec;padding: 10px;border-radius: 6px;">
-            <span style="padding: 0 10px;">Vegetarian</span>
-            <input tabindex="4" id="check" type="checkbox" (change)="handleVegetarian($event)"
-                [checked]="menuOnEdit.vegetarian" style="height: 20px;width: 20px;">
-        </div>
-        <div class="horizontal"
-            style="margin: 5px 0;padding: 5px 0;border: 1px solid #ececec;padding: 10px;border-radius: 6px;">
-            <span style="padding: 0 10px;">Is your Special</span>
-            <input tabindex="5" id="check" type="checkbox" [checked]="menuOnEdit.special"
-                (change)="handleSpecial($event)" style="height: 20px;width: 20px;">
-        </div>
-        <div class="horizontal"
-            style="margin: 5px 0;width: 100%;padding: 5px 0;border: 1px solid #ececec;padding: 10px;border-radius: 6px;">
-            <span style="padding: 0 10px;">Spice</span>
-            <div class="horizontal">
-                <div class="btn-group" role="group" aria-label="Spice Level">
-                    <input tabindex="6" (change)="handleSpiceLevelChange($event)" type="radio" class="btn-check"
-                        value="1" name="spiceLevel" id="low" autocomplete="off" [checked]="menuOnEdit.spice === 1">
-                    <label class="btn btn-sm btn-outline-success" for="low">Low</label>
+        <div class="d-flex">
+            <div class="y-flex" style="padding: 10px; border: 1px solid #e2e2e2;border-radius: 6px;">
+                <div class="input-div">
+                    <input class="_381fS" type="text" name="itemName" id="menuName" tabindex="2" autocomplete="off"
+                        value="" [(ngModel)]="menuOnEdit.name" #ctrl="ngModel" placeholder="Vegetable Biryani">
+                    <div class="_2EeI1 _26LFr"></div>
+                    <label class="_1Cvlf _2tL9P " for="itemName">Name</label>
+                </div>
+                <div class="h-flex"
+                    style="margin: 5px 0;padding: 15px 0;border: 1px solid #ececec;padding: 10px;border-radius: 6px;">
+                    <span style="padding: 0 10px;">Collections</span>
+                    <form [formGroup]="form">
+                        <select formControlName="collection" (change)="onChangeCollection($event)"
+                            style="border:1px solid #ececec;background-color: #f1f1f1;padding: 6px;border-radius: 6px;"
+                            tabindex="1">
+                            <option *ngFor="let collection of collections" [ngValue]="collection">
+                                {{ collection.name }}
+                            </option>
+                        </select>
+                    </form>
+                </div>
 
-                    <input tabindex="7" (change)="handleSpiceLevelChange($event)" type="radio" class="btn-check"
-                        value="2" name="spiceLevel" id="medium" autocomplete="off" [checked]="menuOnEdit.spice === 2">
-                    <label class="btn btn-sm btn-outline-warning" for="medium">Medium</label>
+                <div class="input-div">
+                    <input class="_381fS" type="text" name="itemDesc" id="itemDesc" tabindex="3" autocomplete="off"
+                        value="" [(ngModel)]="menuOnEdit.description" #ctrl="ngModel"
+                        placeholder="Item description goes here">
+                    <div class="_2EeI1 _26LFr"></div>
+                    <label class="_1Cvlf _2tL9P " for="itemDesc">Description</label>
+                </div>
+                <div class="between"
+                    style="margin: 5px 0;padding: 5px 0;border: 1px solid #ececec;padding: 10px;border-radius: 6px;">
+                    <span style="padding: 0 10px;">Vegetarian</span>
+                    <div>
+                        <label class="chk-switch" for="editVegChk">
+                            <input (change)="handleVegetarian($event)" type="checkbox" id="editVegChk"
+                                [checked]="menuOnEdit.vegetarian === true " />
+                            <div class="chk-switch-slider round"></div>
+                        </label>
+                    </div>
+                </div>
+                <div class="between"
+                    style="margin: 5px 0;padding: 5px 0;border: 1px solid #ececec;padding: 10px;border-radius: 6px;">
+                    <span style="padding: 0 10px;">Is your Special</span>
+                    <div>
+                        <label class="chk-switch" for="editSpecialChk">
+                            <input (change)="handleSpecial($event)" type="checkbox" id="editSpecialChk"
+                                [checked]="menuOnEdit.special === true " />
+                            <div class="chk-switch-slider round"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="y-flex" style="padding: 10px; border: 1px solid #e2e2e2;border-radius: 6px;">
+                <div class="horizontal"
+                    style="margin: 5px 0;width: 100%;padding: 5px 0;border: 1px solid #ececec;padding: 10px;border-radius: 6px;">
+                    <span style="padding: 0 10px;">Spice</span>
+                    <div class="horizontal">
+                        <div class="btn-group" role="group" aria-label="Spice Level">
+                            <input tabindex="6" (change)="handleSpiceLevelChange($event)" type="radio" class="btn-check"
+                                value="1" name="spiceLevel" id="low" autocomplete="off"
+                                [checked]="menuOnEdit.spice === 1">
+                            <label class="btn btn-sm btn-outline-success" for="low">Low</label>
 
-                    <input tabindex="8" (change)="handleSpiceLevelChange($event)" type="radio" class="btn-check"
-                        value="3" name="spiceLevel" id="hot" autocomplete="off" [checked]="menuOnEdit.spice === 3">
-                    <label class="btn btn-sm btn-outline-danger" for="hot">Hot</label>
+                            <input tabindex="7" (change)="handleSpiceLevelChange($event)" type="radio" class="btn-check"
+                                value="2" name="spiceLevel" id="medium" autocomplete="off"
+                                [checked]="menuOnEdit.spice === 2">
+                            <label class="btn btn-sm btn-outline-warning" for="medium">Medium</label>
+
+                            <input tabindex="8" (change)="handleSpiceLevelChange($event)" type="radio" class="btn-check"
+                                value="3" name="spiceLevel" id="hot" autocomplete="off"
+                                [checked]="menuOnEdit.spice === 3">
+                            <label class="btn btn-sm btn-outline-danger" for="hot">Hot</label>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div style="border: 1px solid #ededf4;">
-            <span style="display: block;padding: 5px 20px;">Price</span>
-            <div class="d-flex flex-start align-items-center" style="padding: 0 20px;">
-                <input value="" [(ngModel)]="menuOnEdit.price" #ctrl="ngModel" placeholder="10" name="itemPrice"
-                    id="itemPrice" tabindex="9" autocomplete="off"
-                    style="border: none;padding: 2px;margin: 0 0 10px 0;width: 60px;font-size: 25px;">
-                <span>GBP</span>
-            </div>
-        </div>
-        <div class="y-flex" style="border: 1px solid #ececec;padding: 10px; margin: 10px 0;">
-            <strong>Choices</strong>
-            <div class="h-flex flex-wrap" *ngIf="choices.length > 0">
-                <div class="between align-items-center justify-content-center" *ngFor="let choice of choices"
-                    style="background-color: #ececec; padding: 10px;margin-right: 10px;">
-                    <span style="margin-right: 30px;">{{choice.name}}</span>
-                    <span style="margin-right: 10px;">{{choice.price | currency: 'GBP'}}</span>
-                    <button class="btn btn-sm btn-outline-danger" (click)="removeChoice(choice)">X</button>
+                <div class="input-div">
+                    <input class="_381fS" type="text" name="itemPrice" id="itemPrice" tabindex="3" autocomplete="off"
+                        value="" [(ngModel)]="menuOnEdit.price" #ctrl="ngModel"
+                        placeholder="Item description goes here">
+                    <div class="_2EeI1 _26LFr"></div>
+                    <label class="_1Cvlf _2tL9P " for="itemDesc">Price (£)</label>
                 </div>
-            </div>
-            <div class="h-felx" style="background-color: rgb(211, 252, 239);padding: 10px;margin: 10px 0;">
-                <span style="color: rgb(2, 137, 92);margin-right: 20px;">You have {{choices.length}} choices for this
-                    menu.</span>
-                <button class="btn btn-sm btn-success" (click)="openExtraModal(extraContent, 'Choice')">Add </button>
-            </div>
-        </div>
-        <div class="y-flex" style="border: 1px solid #ececec;padding: 10px; margin: 10px 0;">
-            <strong>Extras</strong>
-            <div class="h-flex flex-wrap" *ngIf="extras.length > 0">
-                <div class="between align-items-center justify-content-center" *ngFor="let extra of extras"
-                    style="background-color: #ececec; padding: 10px;margin-right: 10px;">
-                    <span style="margin-right: 30px;">{{extra.name}}</span>
-                    <span style="margin-right: 10px;">{{extra.price | currency: 'GBP'}}</span>
-                    <button class="btn btn-sm btn-outline-danger" (click)="removeExtra(extra)">X</button>
+                <div class="y-flex" style="border: 1px solid #ececec;padding: 10px; margin: 10px 0;">
+                    <strong>Choices</strong>
+                    <div class="h-flex flex-wrap" *ngIf="choices.length > 0">
+                        <div class="between align-items-center justify-content-center" *ngFor="let choice of choices"
+                            style="background-color: #ececec; padding: 10px;margin-right: 10px;">
+                            <span style="margin-right: 30px;">{{choice.name}}</span>
+                            <span style="margin-right: 10px;">{{choice.price | currency: 'GBP'}}</span>
+                            <button class="btn btn-sm btn-outline-danger" (click)="removeChoice(choice)">X</button>
+                        </div>
+                    </div>
+                    <div class="h-felx" style="background-color: rgb(211, 252, 239);padding: 10px;margin: 10px 0;">
+                        <span style="color: rgb(2, 137, 92);margin-right: 20px;">You have {{choices.length}} choices for this
+                            menu.</span>
+                        <button class="btn btn-sm btn-success" (click)="openExtraModal(extraContent, 'Choice')">Add </button>
+                    </div>
                 </div>
-            </div>
-            <div class="h-felx" style="background-color: rgb(211, 252, 239);padding: 10px;margin: 10px 0;">
-                <span style="color: rgb(2, 137, 92);margin-right: 20px;">You have {{extras.length}} extras for this
-                    menu.</span>
-                <button class="btn btn-sm btn-success" (click)="openExtraModal(extraContent, 'Extra')">Add </button>
+                <div class="y-flex" style="border: 1px solid #ececec;padding: 10px; margin: 10px 0;">
+                    <strong>Extras</strong>
+                    <div class="h-flex flex-wrap" *ngIf="extras.length > 0">
+                        <div class="between align-items-center justify-content-center" *ngFor="let extra of extras"
+                            style="background-color: #ececec; padding: 10px;margin-right: 10px;">
+                            <span style="margin-right: 30px;">{{extra.name}}</span>
+                            <span style="margin-right: 10px;">{{extra.price | currency: 'GBP'}}</span>
+                            <button class="btn btn-sm btn-outline-danger" (click)="removeExtra(extra)">X</button>
+                        </div>
+                    </div>
+                    <div class="h-felx" style="background-color: rgb(211, 252, 239);padding: 10px;margin: 10px 0;">
+                        <span style="color: rgb(2, 137, 92);margin-right: 20px;">You have {{extras.length}} extras for this
+                            menu.</span>
+                        <button class="btn btn-sm btn-success" (click)="openExtraModal(extraContent, 'Extra')">Add </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

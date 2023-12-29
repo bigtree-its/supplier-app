@@ -16,35 +16,6 @@ table.table th {
     border: 1px solid #ddd;
 }
 
-.mat-row {
-    height: 20px;
-    line-height: 20px;
-}
-
-.mat-column-Reference {
-    /* width: 32px; */
-    /* border-right: 1px solid currentColor; */
-    padding-right: 5px;
-    text-align: center;
-}
-
-.mat-column-Customer {
-    padding-left: 5px;
-}
-
-.mat-column-Date {
-    font-style: normal;
-}
-
-.mat-column-Amount {
-    width: 32px;
-    text-align: center;
-}
-
-.mat-column-Status {
-    font-weight: bold;
-}
-
 .order-item-container {
     display: flex;
     justify-content: space-between;
@@ -63,36 +34,29 @@ table.table th {
 }
 
 .li-order{
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border-bottom: 1px solid #f8f8f8;
+    background-color: #fff;
     padding: 5px 10px;
+    margin-bottom: 5px;
+    width: 100%;
+    display: flex;
+    align-items: center;
 }
 .li-order:hover{
-    background-color: #ddd;
-}
-/* Mobile */
-
-@media (min-width: 400px) {
-    .sm {
-        display: block;
-    }
+    cursor: pointer;
 }
 
-
-/* Tablet */
-
-@media (min-width: 600px) {
-    .md {
-        display: block;
-    }
+.info-box{
+    display: flex;
+    flex-flow: column wrap;
+    background-color: #fff;
+    flex-grow: 1;
+    border: 1px solid #e6e6e6;
+    border-radius: 5px;
+    transition: all 0.2s ease-in-out;
+    padding: 10px;
 }
 
+@media (min-width: 550px) {
 
-/* Large */
-
-@media (min-width: 900px) {
-    .sm,
-    .md {
-        display: none;
-    }
 }

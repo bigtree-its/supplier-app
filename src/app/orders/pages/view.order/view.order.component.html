@@ -1,0 +1,95 @@
+<div class="container y-flex">
+
+    <div class="between section">
+        <div class="y-flex justify-content-center align-items-center">
+            <strong style="font-size: larger;">#{{order.reference}}</strong>
+        </div>
+        
+        <div class="y-flex justify-content-center align-items-center">
+            <span>Your Earnings</span>
+            <strong style="font-size: large;">{{order.total | currency: 'GBP'}}</strong>
+        </div>
+        <div class="h-flex">
+            <button *ngIf="order.status === 'PAID'" class="btn btn-md btn-success">Accept</button>
+            <button *ngIf="order.status === 'PAID'" class="btn btn-md btn-danger">Reject</button>
+            <button *ngIf="order.status === 'ACCEPTED'" class="btn btn-md btn-success"
+                (click)="onAction('Complete')">Complete</button>
+        </div>
+    </div>
+    <div class="between section">
+        <div class="y-flex">
+            <strong style="font-size: larger;" [class.text-success]="order.status === 'ACCEPTED' || order.status === 'PAID'">{{order.status | titlecase}}</strong>
+            <strong>{{order.dateCreated | date: 'dd/MM/yyyy'}}</strong>
+        </div>
+        <div class="y-flex">
+            <strong>Service Mode</strong>
+            <strong >{{order.serviceMode | titlecase}}</strong>
+        </div>
+    </div>
+    
+    <div class="y-flex section">
+        <strong class="section-header">Summary</strong>
+        <div class="between" style="margin: 5px 0;padding: 0 5px;">
+            <span>Sub Total</span>
+            <span>{{order.subTotal | currency: 'GBP'}}</span>
+        </div>
+        <div class="between" style="margin: 5px 0;padding: 0 5px;">
+            <span>Service Fee</span>
+            <span>{{order.serviceFee | currency: 'GBP'}}</span>
+        </div>
+        <div *ngIf="order.serviceMode === 'DELIVERY'" class="between" style="margin: 5px 0;padding: 0 5px;">
+            <span>Delivery Fee</span>
+            <span>{{order.deliveryFee | currency: 'GBP'}}</span>
+        </div>
+        <div class="between" style="margin: 5px 0;padding: 0 5px;">
+            <span>Packing Fee</span>
+            <span>{{order.packingFee | currency: 'GBP'}}</span>
+        </div>
+        <div class="between" style="margin: 5px 0;padding: 0 5px;">
+            <span style="font-weight: 900;">Total</span>
+            <span style="font-weight: 900;">{{order.total | currency: 'GBP'}}</span>
+        </div>
+    </div>
+    <div class="y-flex section">
+        <strong   class="section-header">Items</strong>
+        <div *ngFor="let item of order.items">
+            <div class="y-flex" style="border-bottom: 1px solid #f2f2f2;">
+                <div class="between">
+                    <strong><small>{{item.name}}</small></strong>
+                    <strong><small>{{item.subTotal | currency: 'GBP'}}</small></strong>
+                </div>
+                <div *ngIf="item.choice !== null && item.choice !== undefined">
+                    <div  class="between">
+                        <span style="font-style: italic;">({{item.choice.name}})</span>
+                        <span>{{item.choice.price | currency: 'GBP'}}</span>
+                    </div>
+                </div>
+                <div *ngIf="item.extras !== null && item.extras !== undefined && item.extras.length > 0">
+                    <div  class="between" *ngFor="let extra of item.extras">
+                        <span>Extra: {{extra.name}}</span>
+                        <span>{{extra.price | currency: 'GBP'}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="y-flex section">
+        <strong   class="section-header">Customer</strong>
+        <span style="font-weight: 900;">{{order.customer.name}}</span>
+        <span style="font-weight: 300;">{{order.customer.email}}</span>
+        <span style="font-weight: 300;">{{order.customer.mobile}}</span>
+        <div *ngIf="order.serviceMode === 'DELIVERY'" class="y-flex" style="margin: 5px 0;">
+            <span>Delivery Address</span>
+            <div class="h-flex">
+                <span>{{order.customer.address.addressLine1}}</span>,
+                <span>{{order.customer.address.addressLine2}}</span>
+            </div>
+            <div class="h-flex">
+                <span>{{order.customer.address.city}}</span>
+                <span style="margin-left: 10px;">{{order.customer.address.postcode | uppercase}}</span>
+            </div>
+            
+        </div>
+    </div>
+</div>

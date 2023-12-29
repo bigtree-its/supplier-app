@@ -1,31 +1,46 @@
 <div class="container y-flex">
 
-    <div class="y-flex" style="padding: 10px 0;">
-        <span style="font-size: x-large;">Dashboard</span> 
-        <small>Welcome to BEKU admin</small>
+    <div class="between">
+        <div class="y-flex" style="padding: 10px 0;">
+            <span style="font-size: x-large;">Dashboard</span> 
+            <small>Welcome to HouseOfChef admin</small>
+        </div>
+        <div class="y-flex" style="padding: 10px 0;">
+            <span> Hello !</span> 
+            <strong style="font-size: large;">{{chef?.name}}</strong>
+        </div>
     </div>
+    
 
     <div class="y-flex" style="border: 1px solid #ddd; padding: 20px; margin: 10px 0;" [routerLink]="[ '/orders']">
         <div style="display: flex;align-items: center;">
             <img src="/assets/icons/fast-food.png" loading="lazy" class="back-left"><span
                 style="font-size: x-large;">Your Orders</span>
         </div>
-        <div class="h-flex">
-            <div class="section y-flex" style="flex-grow: 1;">
+        <div class="h-flex flex-wrap">
+            <div class="info-button y-flex">
                 <span>Today</span>
-                <span>12</span>
+                <span class="value">{{orderProfile?.today.length}}</span>
             </div>
-            <div class="section y-flex" style="flex-grow: 1;">
+            <div class="info-button y-flex">
                 <span>Week</span>
-                <span>120</span>
+                <span class="value">{{orderProfile?.sevenDays.length}}</span>
             </div>
-            <div class="section y-flex" style="flex-grow: 1;">
+            <div class="info-button y-flex">
                 <span>Month</span>
-                <span>1200</span>
+                <span class="value">{{orderProfile?.month.length}}</span>
             </div>
-            <div class="section y-flex" style="flex-grow: 1;">
-                <span>Year</span>
-                <span>12000</span>
+            <div class="info-button y-flex">
+                <span>Previous Month</span>
+                <span class="value">{{orderProfile?.lastMonth.length}}</span>
+            </div>
+            <div class="info-button y-flex">
+                <span>Six Months</span>
+                <span class="value">{{orderProfile?.sixMonth.length}}</span>
+            </div>
+            <div class="info-button y-flex">
+                <span>Yearly</span>
+                <span class="value">{{orderProfile?.year.length}}</span>
             </div>
         </div>
     </div>
@@ -34,22 +49,30 @@
             <img src="/assets/icons/wallet-filled-money-tool.png" loading="lazy" class="back-left"><span
                 style="font-size: x-large;">Your Revenue</span>
         </div>
-        <div class="h-flex">
-            <div class="section y-flex" style="flex-grow: 1;">
+        <div class="h-flex  flex-wrap">
+            <div class="info-button y-flex">
                 <span>Today</span>
-                <span>£12</span>
+                <span class="value">{{orderProfile?.todayRevenue | currency:'GBP'}}</span>
             </div>
-            <div class="section y-flex" style="flex-grow: 1;">
-                <span>Week</span>
-                <span>£120</span>
+            <div class="info-button y-flex">
+                <span>Seven Days</span>
+                <span class="value">{{orderProfile?.sevenDaysRevenue | currency:'GBP'}}</span>
             </div>
-            <div class="section y-flex" style="flex-grow: 1;">
+            <div class="info-button y-flex">
                 <span>Month</span>
-                <span>£1200</span>
+                <span class="value">{{orderProfile?.monthRevenue | currency:'GBP'}}</span>
             </div>
-            <div class="section y-flex" style="flex-grow: 1;">
+            <div class="info-button y-flex">
+                <span>Last Month</span>
+                <span class="value">{{orderProfile?.lastMonthRevenue | currency:'GBP'}}</span>
+            </div>
+            <div class="info-button y-flex">
+                <span>Six Months</span>
+                <span class="value">{{orderProfile?.sixMonthsRevenue | currency:'GBP'}}</span>
+            </div>
+            <div class="info-button y-flex">
                 <span>Year</span>
-                <span>£12000</span>
+                <span class="value">{{orderProfile?.yearRevenue | currency:'GBP'}}</span>
             </div>
         </div>
     </div>
@@ -60,7 +83,7 @@
         <div class="between">
             <div class="y-flex">
                 <span>Total Menus</span>
-                <span style="font-size: 30px;">{{menus.length}}</span>
+                <span style="font-size: 30px;">{{menus?.length}}</span>
             </div>
             <div style="display: flex;align-items: center;">
                 <img src="/assets/icons/fast-food.png" loading="lazy" height="50" width="50">

@@ -1,0 +1,17 @@
+.info-box{
+    display: flex;
+    flex-flow: column wrap;
+    background-color: #fff;
+    flex-grow: 1;
+    border: 1px solid #e6e6e6;
+    border-radius: 5px;
+    transition: all 0.2s ease-in-out;
+    padding: 10px;
+    align-items: center;
+}
+.info-box-title{
+
+}
+.info-box-value{
+    
+}

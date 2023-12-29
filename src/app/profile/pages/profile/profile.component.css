@@ -1,0 +1,68 @@
+.anchor, .leaf {
+    padding-right: 1px;
+    font-weight: bold;
+}
+
+.leaf {
+    font-weight: normal;
+}
+
+.anchor:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.location {
+    border-bottom: 1px solid #f3f3f3;
+    padding: 10px;
+}
+
+.location:hover {
+    cursor: pointer;
+    color: blue;
+}
+
+.switch {
+    display: inline-block;
+    height: 34px;
+    /* width: 80px; */
+}
+
+.switch > input {
+    display: none;
+}
+
+.switch-slider {
+    background-color: #ccc;
+    cursor: pointer;
+    transition: .4s;
+    height: 26px;
+    width: 80px;
+}
+
+.switch-slider:before {
+    background-color: #fff;
+    content: "";
+    height: 26px;
+    position: absolute;
+    transition: .35s;
+    width: 26px;
+}
+
+
+.switch>input:checked+.switch-slider {
+    background-color: #66bb6a;
+} 
+
+.switch>input:checked+.switch-slider:before {
+    transform: translateX(10px);
+    /* -moz-transform: translateX(23px); */
+}
+
+.switch-slider.round {
+    border-radius: 34px;
+}
+
+.switch-slider.round:before {
+    border-radius: 50%;
+}

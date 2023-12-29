@@ -1,0 +1,423 @@
+<div class="container" style="overflow: auto;">
+
+    <div class="y-flex">
+        <div class="y-flex">
+            <div class="h-flex" style="border-bottom: 1px solid #e1e1e1;padding: 10px;">
+                <span class="anchor" (click)="selectActiveLayout('Home', 'home')">Settings</span>
+                <span *ngIf="leafView !== undefined" style="padding-right: 5px;">/</span>
+                <span *ngIf="leafView !== undefined" class="leaf">{{leafView}}</span>
+            </div>
+        </div>
+        <ng-container [ngSwitch]="activeLayout">
+            <ng-container *ngSwitchCase="'Home'" [ngTemplateOutlet]="homeLayout"></ng-container>
+            <ng-container *ngSwitchCase="'Personal'" [ngTemplateOutlet]="personalLayout"></ng-container>
+            <ng-container *ngSwitchCase="'Locations'" [ngTemplateOutlet]="locationsLayout"></ng-container>
+            <ng-container *ngSwitchCase="'Slots'" [ngTemplateOutlet]="slotsLayout"></ng-container>
+            <ng-container *ngSwitchCase="'Cuisines'" [ngTemplateOutlet]="cuisinesLayout"></ng-container>
+            <ng-container *ngSwitchCase="'Settings'" [ngTemplateOutlet]="settingsLayout"></ng-container>
+        </ng-container>
+    </div>
+</div>
+
+<ng-template #homeLayout>
+    <div style="display: flex; justify-content: center;align-items: center;padding: 20px;">
+        <div class="y-flex" style="width: 500px;gap: 20px;">
+            <button class="info-button y-flex" style="flex-grow: 1;" (click)="selectActiveLayout('Personal', 'home')">
+                <span>Personal Details</span>
+            </button>
+            <button class="info-button y-flex" style="flex-grow: 1;" (click)="selectActiveLayout('Locations', 'home')">
+                <span>Your Service Locations</span>
+            </button>
+            <button class="info-button y-flex" style="flex-grow: 1;" (click)="selectActiveLayout('Cuisines', 'home')">
+                <span>Your Cuisines</span>
+            </button>
+            <button class="info-button y-flex" style="flex-grow: 1;" (click)="selectActiveLayout('Slots', 'home')">
+                <span>Your Slots</span>
+            </button>
+            <button class="info-button y-flex" style="flex-grow: 1;" (click)="selectActiveLayout('Settings', 'home')">
+                <span>Kitchen Settings</span>
+            </button>
+        </div>
+    </div>
+</ng-template>
+<ng-template #personalLayout>
+    <div class="y-flex">
+        <div class="d-flex">
+            <div class="y-flex" style="width: 500px;border: 1px solid #e2e2e2; padding: 20px;margin:10px;">
+                <div class="between" style="border-bottom: 1px solid #e2e2e2;margin-bottom: 10px;padding: 10px;">
+                    <span style="font-size: 20px;">Personal details</span>
+                    <div class="h-flex">
+                        <button *ngIf="!editPersonal" class="btn btn-primary btn-sm"
+                            (click)="editData('Personal')">Edit</button>
+                        <button *ngIf="editPersonal" class="btn btn-warning btn-sm"
+                            (click)="cancelEdit()">Cancel</button>
+                        <button *ngIf="editPersonal" class="btn btn-success btn-sm"
+                            (click)="submitPersonal()">Save</button>
+                    </div>
+
+                </div>
+                <div class="y-flex" *ngIf="!editPersonal">
+                    <div class="between" style="margin: 5px 0;">
+                        <span style="font-weight: normal;">Email: </span><span>{{chef.email}}</span>
+                    </div>
+                    <div class="between" style="margin: 5px 0;">
+                        <span>Mobile: </span><span>{{chef.contact.mobile}}</span>
+                    </div>
+                    <div class="between" style="margin: 5px 0;">
+                        <span>Name: </span><span>{{chef.name}}</span>
+                    </div>
+                    <div class="between" style="margin: 5px 0;">
+                        <span>Display Name: </span><span>{{chef.kitchenName}}</span>
+                    </div>
+                </div>
+                <div class="y-flex" style="margin: 10px 0;" *ngIf="editPersonal">
+                    <div class="input-div">
+                        <input class="_381fS" type="text" name="name" id="name" tabindex="3" autocomplete="off" value=""
+                            [(ngModel)]="chef.name" #ctrl="ngModel">
+                        <div class="_2EeI1 _26LFr"></div>
+                        <label class="_1Cvlf _2tL9P" for="name">Name</label>
+                    </div>
+                    <div class="input-div">
+                        <input class="_381fS" type="email" name="email" id="email" tabindex="3" autocomplete="off"
+                            value="" [(ngModel)]="chef.email" #ctrl="ngModel">
+                        <div class="_2EeI1 _26LFr"></div>
+                        <label class="_1Cvlf _2tL9P" for="email">Email</label>
+                    </div>
+                    <div class="input-div">
+                        <input class="_381fS" type="text" name="mobile" id="mobile" tabindex="4" autocomplete="off"
+                            value="" [(ngModel)]="chef.contact.mobile" #ctrl="ngModel">
+                        <div class="_2EeI1 _26LFr"></div>
+                        <label class="_1Cvlf _2tL9P" for="mobile">Mobile</label>
+                    </div>
+                    <div class="input-div">
+                        <input class="_381fS" type="text" name="kitchenName" id="kitchenName" tabindex="4"
+                            autocomplete="off" value="" [(ngModel)]="chef.kitchenName" #ctrl="ngModel">
+                        <div class="_2EeI1 _26LFr"></div>
+                        <label class="_1Cvlf _2tL9P" for="kitchenName">Kitchen Name</label>
+                    </div>
+                </div>
+
+            </div>
+            <div class="y-flex" style="width: 500px;border: 1px solid #e2e2e2; padding: 20px;margin:10px;">
+                <div class="between" style="border-bottom: 1px solid #e2e2e2;margin-bottom: 10px;padding: 10px;">
+                    <span style="font-size: 20px;">Address details</span>
+                    <div class="h-flex">
+                        <button *ngIf="!editAddress" class="btn btn-primary btn-sm"
+                            (click)="editData('Address')">Edit</button>
+                        <button *ngIf="editAddress" class="btn btn-warning btn-sm"
+                            (click)="cancelEdit()">Cancel</button>
+                        <button *ngIf="editAddress" class="btn btn-success btn-sm"
+                            (click)="submitAddress()">Save</button>
+                    </div>
+                </div>
+                <div style="padding: 0 20px;" *ngIf="!editAddress">
+                    <span style="display: block;">{{chef.address.addressLine1}}</span>
+                    <span style="display: block;">{{chef.address.addressLine2}}</span>
+                    <span style="display: block;">{{chef.address.city}}</span>
+                    <span style="display: block;">{{chef.address.postcode}}</span>
+                </div>
+                <div class="y-flex" style="margin: 10px 0;" *ngIf="editAddress">
+                    <div class="input-div">
+                        <input class="_381fS" type="text" name="addressLine1" id="addressLine1" tabindex="1"
+                            autocomplete="off" value="" [(ngModel)]="chef.address.addressLine1" #ctrl="ngModel">
+                        <div class="_2EeI1 _26LFr"></div>
+                        <label class="_1Cvlf _2tL9P" for="addressLine1">Address Line1</label>
+                    </div>
+                    <div class="input-div">
+                        <input class="_381fS" type="text" name="addressLine2" id="addressLine2" tabindex="2"
+                            autocomplete="off" value="" [(ngModel)]="chef.address.addressLine2" #ctrl="ngModel">
+                        <div class="_2EeI1 _26LFr"></div>
+                        <label class="_1Cvlf _2tL9P" for="addressLine2">Address Line2</label>
+                    </div>
+                    <div class="input-div">
+                        <input class="_381fS" type="text" name="city" id="city" tabindex="3" autocomplete="off" value=""
+                            [(ngModel)]="chef.address.city" #ctrl="ngModel">
+                        <div class="_2EeI1 _26LFr"></div>
+                        <label class="_1Cvlf _2tL9P" for="city">City</label>
+                    </div>
+                    <div class="input-div">
+                        <input class="_381fS" type="text" name="postcode" id="postcode" tabindex="4" autocomplete="off"
+                            value="" [(ngModel)]="chef.address.postcode" #ctrl="ngModel">
+                        <div class="_2EeI1 _26LFr"></div>
+                        <label class="_1Cvlf _2tL9P" for="postcode">Postcode</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #locationsLayout>
+    <div class="y-flex">
+        <div class="d-flex">
+            <div class="y-flex" style="width: 500px;border: 1px solid #e2e2e2; padding: 20px;margin:10px;">
+                <div class="between" style="border-bottom: 1px solid #e2e2e2;margin-bottom: 10px;padding: 10px;">
+                    <span style="font-size: 20px;">Locations I serve</span>
+                    <div class="h-flex">
+                        <button *ngIf="!editLocations" class="btn btn-primary btn-sm"
+                            (click)="editData('Locations')">Add</button>
+                        <button *ngIf="editLocations" class="btn btn-warning btn-sm"
+                            (click)="cancelEdit()">Cancel</button>
+                        <button *ngIf="editLocations" class="btn btn-success btn-sm" (click)="submitLocations()">Save Changes</button>
+                    </div>
+
+                </div>
+                <div class="y-flex" style="margin: 10px 0; gap: 10px;" *ngIf="editLocations">
+                    <div class="between" style="border-bottom: 1px solid #e2e2e2;padding: 10px;;">
+                        <span>Available Locations</span>
+                        <button class="btn btn-sm btn-outline-secondary" title="Close"
+                            (click)="cancelEdit()">X</button>
+                    </div>
+                    <div class="d-flex">
+                        <div class="clickableDiv" *ngFor="let sl of serviceAreas" (click)="onSelectServiceLocation(sl)">
+                            <span>{{ sl.name }}, {{sl.city}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="!editLocations">
+                    <div class="d-flex">
+                        <div class="unClickableDiv between" *ngFor="let sl of chef.serviceAreas">
+                            <span>{{ sl.name }}, {{sl.city}}</span>
+                            <button class="btn btn-sm btn-outline-danger" (click)="removeLocation(sl)">X</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #slotsLayout>
+    <div class="y-flex">
+        <div class="d-flex">
+            <div class="y-flex" style="width: 500px;border: 1px solid #e2e2e2; padding: 20px;margin:10px;">
+                <div class="between" style="border-bottom: 1px solid #e2e2e2;margin-bottom: 10px;padding: 10px;">
+                    <span style="font-size: 20px;">My Slots in a day</span>
+                    <div class="h-flex">
+                        <button *ngIf="!editSlots" class="btn btn-primary btn-sm"
+                            (click)="editData('Slots')">Add</button>
+                        <button *ngIf="editSlots" class="btn btn-warning btn-sm"
+                            (click)="cancelEdit()">Cancel</button>
+                    </div>
+
+                </div>
+                <div class="y-flex" style="margin: 10px 0; gap: 10px;" *ngIf="editSlots">
+                    <div class="between" style="border-bottom: 1px solid #e2e2e2;padding: 10px;;">
+                        <span>Available Slots</span>
+                        <button class="btn btn-sm btn-outline-secondary" title="Close"
+                            (click)="cancelEdit()">X</button>
+                    </div>
+                    <div class="d-flex">
+                        <div class="clickableDiv" *ngFor="let s of slots" (click)="onSelectSlot(s)">
+                            <span>{{ s.name }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="!editSlots">
+                    <div class="d-flex" >
+                        <div class="unClickableDiv between" *ngFor="let s of chef.slots">
+                            <span>{{s.name}}</span>
+                            <button title="Remove" class="btn btn-sm btn-outline-danger" (click)="removeSlot(s)">X</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #cuisinesLayout>
+    <div class="y-flex">
+        <div class="d-flex">
+            <div class="y-flex" style="width: 500px;border: 1px solid #e2e2e2; padding: 20px;margin:10px;">
+                <div class="between" style="border-bottom: 1px solid #e2e2e2;margin-bottom: 10px;padding: 10px;">
+                    <span style="font-size: 20px;">Cuisines I prepare</span>
+                    <div class="h-flex">
+                        <button *ngIf="!editCuisines" class="btn btn-primary btn-sm"
+                            (click)="editData('Cuisines')">Add</button>
+                        <button *ngIf="editCuisines" class="btn btn-warning btn-sm"
+                            (click)="cancelEdit()">Cancel</button>
+                    </div>
+
+                </div>
+                <div class="y-flex" style="margin: 10px 0; gap: 10px;" *ngIf="editCuisines">
+                    <div class="between" style="border-bottom: 1px solid #e2e2e2;padding: 10px;;">
+                        <span>Available Cuisines</span>
+                        <button class="btn btn-sm btn-outline-secondary" title="Close"
+                            (click)="cancelEdit()">X</button>
+                    </div>
+                    <div class="d-flex">
+                        <div class="clickableDiv" *ngFor="let c of cuisines" (click)="onSelectCuisine(c)">
+                            <span>{{ c.name }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="!editCuisines">
+                    <div class="d-flex" >
+                        <div class="between"
+                            style="border: 1px solid #e2e2e2;padding: 15px; border-radius: 6px;margin: 5px 0;" *ngFor="let c of chef.cuisines">
+                            <span>{{c.name}}</span>
+                            <button title="Remove" class="btn btn-sm btn-outline-danger" (click)="removeCuisine(c)">X</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #settingsLayout>
+    <div class="y-flex">
+        <div class="between" style="border-bottom: 1px solid #e2e2e2;margin-bottom: 10px;padding: 10px;">
+            <span style="font-size: 20px;">My Kitchen</span>
+            <div class="h-flex">
+                <button *ngIf="!editKitchen" class="btn btn-primary btn-sm" (click)="editData('Kitchen')">Edit</button>
+                <button *ngIf="editKitchen" class="btn btn-warning btn-sm" (click)="cancelEdit()">Cancel</button>
+                <button *ngIf="editKitchen" class="btn btn-success btn-sm" (click)="submitKitchenSettings()">Submit Changes</button>
+            </div>
+        </div>
+        <div *ngIf="!editKitchen" class="d-flex" style="padding: 10px;">
+
+            <div class="y-flex" style="border: 1px solid #e2e2e2; padding: 20px;margin:10px;border-radius: 6px;">
+                <div class="between" style="margin: 5px 0;">
+                    <span style="font-weight: normal;">Kicthen Name: </span><span
+                        style="font-weight: 600;font-size: 20px;">{{chef.kitchenName}}</span>
+                </div>
+                <div class="y-flex" style="margin: 5px 0;gap: 10px;">
+                    <span style="font-weight: normal;">Kicthen Description: </span><span
+                        style="font-weight: 400;">{{chef.description}}</span>
+                </div>
+                <div class="between" style="margin: 5px 0;">
+                    <span style="font-weight: normal;">Kicthen Status: </span><span style="font-weight: 600;">{{chef.active
+                        === true ?
+                        "Open": "Closed"}}</span>
+                </div>
+                <div class="between" style="margin: 5px 0;">
+                    <span style="font-weight: normal;">I take Party Orders: </span><span
+                        style="font-weight: 600;">{{chef.doPartyOrders === true ? "Yes": "No"}}</span>
+                </div>
+                <div class="between" style="margin: 5px 0;">
+                    <span style="font-weight: normal;">Packing Fee: </span><span
+                        style="font-weight: 600;">{{chef.packagingFee | currency: 'GBP'}}</span>
+                </div>
+            </div>
+            <div class="y-flex" style="border: 1px solid #e2e2e2; padding: 20px;margin:10px;border-radius: 6px;">
+                <div class="between" style="margin: 5px 0;">
+                    <span style="font-weight: normal;">I do delivery: </span><span
+                        style="font-weight: 600;">{{chef.doDelivery === true ? "Yes": "No"}}</span>
+                </div>
+                
+                <div class="between" style="margin: 5px 0;">
+                    <span style="font-weight: normal;">Minimum order for delivery: </span><span
+                        style="font-weight: 600;">{{chef.minimumOrder | currency: 'GBP'}}</span>
+                </div>
+                <div class="between" style="margin: 5px 0;">
+                    <span style="font-weight: normal;">Minimum order for Party: </span><span
+                        style="font-weight: 600;">{{chef.minimumPartyOrder | currency: 'GBP'}}</span>
+                </div>
+                <div class="between" style="margin: 5px 0;">
+                    <span style="font-weight: normal;">Maximum distance I can deliver: </span><span
+                        style="font-weight: 600;">{{chef.deliveryDistance}}</span>
+                </div>
+                <div class="between" style="margin: 5px 0;">
+                    <span style="font-weight: normal;">Delivery Fee: </span><span
+                        style="font-weight: 600;">{{chef.deliveryFee | currency: 'GBP'}}</span>
+                </div>
+                <div class="between" style="margin: 5px 0;">
+                    <span style="font-weight: normal;">I do free delivery if order over: </span><span
+                        style="font-weight: 600;">{{chef.freeDeliveryOver | currency: 'GBP'}}</span>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="editKitchen" class="d-flex" style="margin: 10px 0;" >
+            <div class="y-flex"  style="border: 1px solid #e2e2e2; padding: 20px;margin:10px;border-radius: 6px;">
+                <div class="input-div">
+                    <input class="_381fS" type="text" name="kitchenName" id="kitchenName" tabindex="1" autocomplete="off"
+                        value="" [(ngModel)]="chef.kitchenName" #ctrl="ngModel">
+                    <div class="_2EeI1 _26LFr"></div>
+                    <label class="_1Cvlf _2tL9P" for="kitchenName">Kitchen Name</label>
+                </div>
+                <div class="input-div">
+                    <input class="_381fS" type="text" name="description" id="description" tabindex="1" autocomplete="off"
+                        value="" [(ngModel)]="chef.description" #ctrl="ngModel">
+                    <div class="_2EeI1 _26LFr"></div>
+                    <label class="_1Cvlf _2tL9P" for="description">Description</label>
+                </div>
+                <div class="input-div" style="padding: 5px 10px 0 10px;">
+                    <div class="between">
+                        <span>Kitchen Status</span>
+                        <div>
+                            <label class="switch" for="kitchenStatus">
+                                <input (change)="onChangeKitchenStatus($event)" type="checkbox" id="kitchenStatus"
+                                    [checked]="chef.active === true " />
+                                <div class="switch-slider round"><span *ngIf="chef.active"
+                                        style="float: left; padding: 0 10px;color: #fff;font-weight: 900;">Open</span><span
+                                        *ngIf="!chef.active"
+                                        style="float: right; padding: 0 10px;font-weight: 900;">Closed</span></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-div">
+                    <input class="_381fS" type="text" name="packingFee" id="packingFee" tabindex="1" autocomplete="off"
+                        value="" [(ngModel)]="chef.packagingFee" #ctrl="ngModel">
+                    <div class="_2EeI1 _26LFr"></div>
+                    <label class="_1Cvlf _2tL9P" for="packingFee">Packing Fee (£)</label>
+                </div>
+            </div>
+            <div class="y-flex"  style="border: 1px solid #e2e2e2; padding: 20px;margin:10px;border-radius: 6px;">
+                <div class="input-div y-flex" style="padding: 10px;">
+                    <div class="between">
+                        <span>I do delivery</span>
+                        <div>
+                            <label class="switch" for="DoDelivery">
+                                <input (change)="onChangeDoDelivery($event)" type="checkbox" id="DoDelivery"
+                                    [checked]="chef.doDelivery === true " />
+                                <div class="switch-slider round"><span *ngIf="chef.doDelivery"
+                                        style="float: left; padding: 0 10px;color: #fff;font-weight: 900;">Yes</span><span
+                                        *ngIf="!chef.doDelivery"
+                                        style="float: right; padding: 0 10px;font-weight: 900;">No</span></div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="input-div" *ngIf="chef.doDelivery">
+                        <input class="_381fS-currency" type="text" name="deliveryFee" id="deliveryFee" tabindex="1"
+                            autocomplete="off" value="" [(ngModel)]="chef.deliveryFee" #ctrl="ngModel">
+                        <div class="_2EeI1 _26LFr"></div>
+                        <label class="_1Cvlf _2tL9P" for="deliveryFee">Delivery Fee (£)</label>
+                    </div>
+                    <div class="input-div" *ngIf="chef.doDelivery">
+                        <input class="_381fS-currency" type="text" name="freeDeliveryOver" id="freeDeliveryOver"
+                            tabindex="1" autocomplete="off" value="" [(ngModel)]="chef.freeDeliveryOver" #ctrl="ngModel">
+                        <div class="_2EeI1 _26LFr"></div>
+                        <label class="_1Cvlf _2tL9P" for="freeDeliveryOver">Free Delivery if order total over (£)</label>
+                    </div>
+                    <div class="input-div" *ngIf="chef.doDelivery">
+                        <input class="_381fS-currency" type="text" name="deliveryMinimum" id="minimumOrderForDelivery"
+                            tabindex="1" autocomplete="off" value="{{chef.deliveryMinimum | currency : 'GBP'}}"
+                            [(ngModel)]="chef.deliveryMinimum" #ctrl="ngModel">
+                        <div class="_2EeI1 _26LFr"></div>
+                        <label class="_1Cvlf _2tL9P" for="deliveryMinimum">Minimum Order for delivery (£)</label>
+                    </div>
+                    <div class="input-div" *ngIf="chef.doDelivery">
+                        <input class="_381fS" type="text" name="maxDeliveryDistance" id="maxDeliveryDistance" tabindex="1"
+                            autocomplete="off" value="" [(ngModel)]="chef.deliveryDistance" #ctrl="ngModel">
+                        <div class="_2EeI1 _26LFr"></div>
+                        <label class="_1Cvlf _2tL9P" for="maxDeliveryDistance">Maximum distance for delivery (Miles)</label>
+                    </div>
+                </div>
+                <div class="input-div" style="padding: 10px;">
+                    <div class="between">
+                        <span>I take Party Orders</span>
+                        <div>
+                            <label class="switch" for="doPartyOrders">
+                                <input (change)="onChangeDoPartyOrder($event)" type="checkbox" id="doPartyOrders"
+                                    [checked]="chef.doPartyOrders === true" />
+                                <div class="switch-slider round"><span *ngIf="chef.doPartyOrders"
+                                        style="float: left; padding: 0 10px;color: #fff;font-weight: 900;">Yes</span><span
+                                        *ngIf="!chef.doPartyOrders"
+                                        style="float: right; padding: 0 10px;font-weight: 900;">No</span></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
