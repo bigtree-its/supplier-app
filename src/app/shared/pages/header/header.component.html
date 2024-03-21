@@ -2,10 +2,10 @@
     <header>
         <div class="wrapper">
             <div class="logo">
-                House Of Chef
+                Desi Times
             </div>
             <div class="navbar" #navBar>
-                
+
                 <div>
                     <ul>
                         <li *ngIf="user === null || user === undefined"><a href="/login">Login</a></li>
@@ -34,15 +34,10 @@
             </div>
         </div>
     </header>
-    <div *ngIf="user !== null && user !== undefined" class="h-flex justify-content-center align-items-center"
-        style="height: 50px; line-height: 50px;z-index: 999;">
-        <strong class="navLink" (click)="onSelectNavLink('Dashboard', '/home')"
-            [class.navLink-selected]="isNavSelected('Dashboard')">Dashboard</strong>
-        <strong class="navLink" (click)="onSelectNavLink('Orders', '/orders')"
-            [class.navLink-selected]="isNavSelected('Orders')">Orders</strong>
-        <strong class="navLink" (click)="onSelectNavLink('Menus', '/menus')"
-            [class.navLink-selected]="isNavSelected('Menus')">Menus</strong>
-        <strong class="navLink" (click)="onSelectNavLink('Profile', '/profile')"
-            [class.navLink-selected]="isNavSelected('Profile')">Settings</strong>
+    <div *ngIf="user !== null && user !== undefined" class="h-flex justify-content-center align-items-center" style="height: 50px; line-height: 50px;z-index: 999;">
+        <strong class="navLink" (click)="onSelectNavLink('Dashboard', '/home')" [class.navLink-selected]="isNavSelected('Dashboard')">Dashboard</strong>
+        <strong class="navLink" (click)="onSelectNavLink('Orders', '/orders')" [class.navLink-selected]="isNavSelected('Orders')">Orders</strong>
+        <strong class="navLink" (click)="onSelectNavLink('Menus', '/menus')" [class.navLink-selected]="isNavSelected('Menus')">Menus</strong>
+        <strong class="navLink" (click)="onSelectNavLink('Profile', '/profile')" [class.navLink-selected]="isNavSelected('Profile')">Settings</strong>
     </div>
 </div>

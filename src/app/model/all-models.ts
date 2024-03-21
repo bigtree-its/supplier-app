@@ -8,9 +8,8 @@ export interface RegisterRequest {
 }
 
 export interface LoginRequest {
-    email: string;
+    username: string;
     password: string;
-    userType: string;
 }
 
 export interface LogoutRequest {
@@ -19,6 +18,11 @@ export interface LogoutRequest {
 
 export interface Errors {
     errors: { [key: string]: string };
+}
+
+export interface SignupResponse{
+    endpoint: string;
+    message: string;
 }
 
 export interface LoginResponse {

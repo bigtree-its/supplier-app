@@ -23,6 +23,7 @@ export class RegisterComponent {
   register: RegisterRequest;
   registerForm: FormGroup;
   errorMessage: any;
+  signupSuccess: boolean;
 
   constructor(private accountService: AccountService,
     private router: Router,
@@ -56,17 +57,19 @@ export class RegisterComponent {
         email: this.registerForm.get('email').value,
         password: this.registerForm.get('password').value,
         mobile: this.registerForm.get('mobile').value,
-        userType: 'SUPPLIER',
+        userType: 'Supplier',
       };
       console.log('Registering '+ JSON.stringify(this.register))
 
       this.accountService.register(this.register).subscribe(
         (data) => {
           console.warn(JSON.stringify(data, null, 2));
-          this.router.navigate(['login']);
+          this.signupSuccess = true;
+          // this.router.navigate(['login']);
         },
         (err) => {
-          this.errorMessage = err.error.detail;
+          console.log('Error : '+ JSON.stringify(err))
+          this.errorMessage = err.error?.detail;
         }
       );
     } else {
